@@ -1,0 +1,18 @@
+{
+  "name": "virtualizorjs",
+  "version": "1.0.0",
+  "description": "Streamlined virtualizor management for developers",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "virtualizor",
+    "api",
+    "nodejs",
+    "js",
+    "sdk"
+  ],
+  "author": "kkMihai",
+  "license": "MIT"
+}
