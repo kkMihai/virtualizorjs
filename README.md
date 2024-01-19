@@ -14,6 +14,7 @@ VirtualizorJS simplifies the management of Virtualizor servers with a streamline
 - [Usage](#usage)
 - [Examples](#examples)
 - [API Documentation](#api-documentation)
+- [Roadmap](#roadmap)
 - [Contributing](#contributing)
 - [License](#license)
 
