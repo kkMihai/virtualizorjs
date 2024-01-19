@@ -50,7 +50,7 @@ ListVPS().then((data) => {
 - [Create VPS](/examples/createvps.js)
 
 
-## API Documentation
+## Documentation
 
 - Check the [Wiki](https://github.com/kkMihai/virtualizorjs/wiki/VirtualizorClient-Class) for detailed documentation.
 
