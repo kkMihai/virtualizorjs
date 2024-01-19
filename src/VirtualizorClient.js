@@ -16,7 +16,7 @@ const Actions = require("./actions");
 /**
  * @class VirtualizorClient
  * @description - This class is used to make http requests to Virtualizor API
- * @version 1.0.0
+ * @version 1.0.0-beta
  * @author kkMihai <kkmihai@duck.com>
  * @param {Object} optionsv - Options for VirtualizorClient
  * @param {String} options.host - Hostname of the Virtualizor server (IP or domain)
