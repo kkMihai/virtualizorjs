@@ -52,7 +52,7 @@ ListVPS().then((data) => {
 
 ## API Documentation
 
-- Check the [Wiki](https://github.com/kkMihai/virtualizorjs/wiki) for detailed API documentation.
+- Check the [Wiki](https://github.com/kkMihai/virtualizorjs/wiki/VirtualizorClient-Class) for detailed documentation.
 
 ## Contributing
 
