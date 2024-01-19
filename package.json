@@ -21,6 +21,9 @@
     "powerful",
     "fast"
   ],
+  "publishConfig": {
+    "@kkmihai:registry": "https://npm.pkg.github.com"
+  },
   "author": "kkMihai",
   "license": "MIT",
   "github": "https://github.com/kkMihai/virtualizorjs",
