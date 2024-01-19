@@ -88,7 +88,7 @@ eventOn('vpsRestarted', (response) => {
 });
 ```
 
-##❓ What's the point of using **`Event Listeners`**?
+## ❓ What's the point of using **`Event Listeners`**?
  - **`Event Listeners`** are useful when you want to perform an action when a certain event occurs without modifying the source code of the **`VirtualizorJS`** library to avoid breaking changes.
  - For example, you can use **`Event Listeners`** to send a notification to your `users` when a event is triggered.
  - You can also use **`Event Listeners`** to perform an action when a event is triggered.
