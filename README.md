@@ -33,7 +33,7 @@ const VirtualizorClient = require('virtualizorjs');
 // Initialize VirtualizorClient
 const { ListVPS } = new VirtualizorClient({
   host: '< IP or Hostname of Virtualizor Server >',
-  port: 4083,
+  port: 4083, // or 4085 for SSL
   adminapikey: "< Your API KEY >",
   adminapipass: "< Your API PASS >",
 });
