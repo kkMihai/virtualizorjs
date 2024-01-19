@@ -15,6 +15,12 @@ module.exports = {
    * @type {string}
    */
   VPSManage: "vpsmanage",
+ 
+  /**
+   * Action to get a VPS Info
+   * @type {string}
+  */
+  GetVPS: "vs",
 
   /**
    * Action to list all VPS.

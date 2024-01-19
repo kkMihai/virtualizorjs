@@ -95,15 +95,9 @@ class VirtualizorClient extends EventEmitter {
       const req = https.request(options, (res) => {
         let data = "";
     
-      console.log('statusCode:', res.statusCode);
-      console.log('headers:', res.headers);
-      console.log('data:', data);
-      console.log(res.statusMessage);
+      console.log(data);
 
-      if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
-       console.log('redirecting to ', res.headers.location);
-      }
-            
+
         res.on("data", (chunk) => {
           data += chunk;
         });
@@ -206,8 +200,8 @@ class VirtualizorClient extends EventEmitter {
    */
   async GetVPS(id) {
     const queryParams = {
-      act: Actions.VPSManage,
-      changeserid: id,
+      act: Actions.GetVPS,
+      vpsid: id,
       adminapikey: this.adminapikey,
       adminapipass: this.adminapipass,
     };
@@ -215,14 +209,20 @@ class VirtualizorClient extends EventEmitter {
     const path = `/index.php${this.buildQueryString(queryParams)}`;
 
     try {
-      const res = await this.makeHttpRequest(path);
+
+      if (!id) {
+        return Promise.reject(new Error("vpsid is required"));
+      }
+
+      const res = await this.makeHttpRequest(path, "POST");
       let resData = res;
 
       if (!this.isRawResponse) {
-        resData = res
+        resData = res.vs[id];
       }
 
       return Promise.resolve(resData);
+
     } catch (err) {
       return Promise.reject(err);
     }
