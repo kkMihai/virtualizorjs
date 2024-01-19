@@ -34,8 +34,8 @@ const VirtualizorClient = require('virtualizorjs');
 const { ListVPS } = new VirtualizorClient({
   host: '< IP or Hostname of Virtualizor Server >',
   port: 4083,
-  key: "< Your API KEY >",
-  pass: "< Your API PASS >",
+  adminapikey: "< Your API KEY >",
+  adminapipass: "< Your API PASS >",
 });
 
 // Using const client = new VirtualizorClient({ ... }) is also valid, but you will have to use client.ListVPS() instead of ListVPS() which just looks ugly.
@@ -61,8 +61,8 @@ const VirtualizorClient = require('virtualizorjs');
 const { on: eventOn } = new VirtualizorClient({
   host: '< IP or Hostname of Virtualizor Server >',
   port: 4083,
-  key: "< Your API KEY >",
-  pass: "< Your API PASS >",
+  adminapikey: "< Your API KEY >",
+  adminapipass: "< Your API PASS >",
 });
 
 // - Event Types - :

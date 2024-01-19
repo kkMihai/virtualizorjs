@@ -20,7 +20,7 @@ module.exports = {
    * Action to list all VPS.
    * @type {string}
    */
-  ListVPS: "vs",
+  ListVPS: "listvs",
 
   /**
    * Action to start a VPS.

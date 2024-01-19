@@ -3,8 +3,8 @@ const VirtualizorClient = require('virtualizorjs');
 const { on: eventOn } = new VirtualizorClient({
   host: '< IP or Hostname of Virtualizor Server >',
   port: 4083,
-  key: "< Your API KEY >",
-  pass: "< Your API PASS >",
+  adminapikey: "< Your API KEY >",
+  adminapipass: "< Your API PASS >",
 });
 
 // Event listener for when a virtual server is created

@@ -19,19 +19,19 @@ const Actions = require("./actions");
  * @author kkMihai <kkmihai@duck.com>
  * @param {String} host - Hostname of the Virtualizor server (IP or domain)
  * @param {String} port - Port of the Virtualizor server (default: 4083)
- * @param {String} key - API key
- * @param {String} pass - API password
+ * @param {String} adminapikey - API admin api key
+ * @param {String} adminapipass - API admin api pass
  * @param {Boolean} isRawResponse - If true, the response will be the raw response from the API, Recommended to set this to false
  * @returns {VirtualizorClient} VirtualizorClient
  */
 
 class VirtualizorClient extends EventEmitter {
-  constructor({ host, port, key, pass, isRawResponse = false }) {
+  constructor({ host, port, adminapikey, adminapipass, isRawResponse = false }) {
     super();
     this.host = host;
     this.port = port;
-    this.key = key;
-    this.pass = pass;
+    this.adminapikey = adminapikey;
+    this.adminapipass = adminapipass;
     this.isRawResponse = isRawResponse
 
     /**
@@ -82,18 +82,27 @@ class VirtualizorClient extends EventEmitter {
     const options = {
       host: this.host,
       port: this.port,
+      protocol: "https:",
       path: path,
       method: method,
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
-      agent: new https.Agent({ rejectUnauthorized: false }),
+      agent: new https.Agent({ rejectUnauthorized: false ,requestCert: false }),
     };
 
     return new Promise((resolve, reject) => {
       const req = https.request(options, (res) => {
         let data = "";
     
+      console.log('statusCode:', res.statusCode);
+      console.log('headers:', res.headers);
+      console.log('data:', data);
+      console.log(res.statusMessage);
+
+      if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+       console.log('redirecting to ', res.headers.location);
+      }
             
         res.on("data", (chunk) => {
           data += chunk;
@@ -132,9 +141,9 @@ class VirtualizorClient extends EventEmitter {
     virtualizationType,
     nodeSelection,
     userEmail,
-    userPassword,
+    userpassword,
     serverHostname,
-    rootPassword,
+    rootpassword,
     osId,
     ipAddress,
     storageSpace,
@@ -162,17 +171,17 @@ class VirtualizorClient extends EventEmitter {
       virt: virtualizationType,
       node_select: nodeSelection,
       user_email: userEmail,
-      user_pass: userPassword,
+      user_pass: userpassword,
       hostname: serverHostname,
-      root_pass: rootPassword,
+      root_pass: rootpassword,
       os_id: osId,
       ips: ipAddress,
       space: handleDiskSpace(storageSpace),
       ram: serverRam,
       bandwidth: bandwidthLimit,
       cores: cpuCores,
-      key: this.key,
-      pass: this.pass,
+      adminapikey: this.adminapikey,
+      adminapipass: this.adminapipass,
     };
 
     const path = `/index.php${this.buildQueryString(queryParams)}`;
@@ -199,8 +208,8 @@ class VirtualizorClient extends EventEmitter {
     const queryParams = {
       act: Actions.VPSManage,
       changeserid: id,
-      key: this.key,
-      pass: this.pass,
+      adminapikey: this.adminapikey,
+      adminapipass: this.adminapipass,
     };
 
     const path = `/index.php${this.buildQueryString(queryParams)}`;
@@ -210,21 +219,7 @@ class VirtualizorClient extends EventEmitter {
       let resData = res;
 
       if (!this.isRawResponse) {
-        resData = {
-          ip: res.info.ip,
-          hostname: res.info.hostname,
-          status: res.info.status,
-          os: res.info.vps.os_name,
-          cores: res.info.vps.cores,
-          ram: res.info.vps.ram,
-          space: res.info.vps.space,
-          bandwidth: {
-            limit: res.info.bandwidth.limit,
-            used: res.info.bandwidth.used,
-            free: res.info.bandwidth.free,
-          },
-          datacenter: res.info.server_name,
-        };
+        resData = res
       }
 
       return Promise.resolve(resData);
@@ -239,7 +234,7 @@ class VirtualizorClient extends EventEmitter {
  * @param {Number} [vpsid] - Search using id
  * @param {String} [vpsname] - Search using vid
  * @param {String} [vpsip] - Results will be returned on the basis of the ip
- * @param {String} [vpshostname] - VPS is searched on the basis of the hostname passed
+ * @param {String} [vpshostname] - VPS is searched on the basis of the hostname adminapipassed
  * @param {String} [vpsstatus] - VPS is searched on the basis of the status of the vps
  *   (type 's' for suspended, type 'u' for unsuspended)
  * @param {String} [vstype] - VPS is searched on the basis of the type of virtualization,
@@ -273,8 +268,8 @@ async ListVPS({
 }) {
   const queryParams = {
     act: Actions.ListVPS,
-    key: this.key,
-    pass: this.pass,
+    apiadminapikey: this.adminapikey,
+    apiadminapipass: this.adminapipass,
     vpsid,
     vpsname,
     vpsip,
@@ -298,8 +293,8 @@ async ListVPS({
     let resData = res;
 
     if (!this.isRawResponse && res.data) {
-      resData = Object.keys(res.data).reduce((acc, key) => {
-        const vps = res.data.vs[key];
+      resData = Object.adminapikeys(res.data).reduce((acc, adminapikey) => {
+        const vps = res.data.vs[adminapikey];
 
         if (vps && vps.vpsid && vps.hostname && vps.os_name) {
           acc.push({
@@ -338,8 +333,8 @@ async ListVPS({
     const queryParams = {
       act: Actions.StartVPS,
       vpsid: vpsId,
-      key: this.key,
-      pass: this.pass,
+      adminapikey: this.adminapikey,
+      adminapipass: this.adminapipass,
     };
 
     const path = `/index.php${this.buildQueryString(queryParams)}&action=vs`;
@@ -366,8 +361,8 @@ async ListVPS({
     const queryParams = {
       act: Actions.StopVPS,
       vpsid: vpsId,
-      key: this.key,
-      pass: this.pass,
+      adminapikey: this.adminapikey,
+      adminapipass: this.adminapipass,
     };
 
     const path = `/index.php${this.buildQueryString(queryParams)}&action=vs`;
@@ -394,8 +389,8 @@ async ListVPS({
     const queryParams = {
       act: Actions.RestartVPS,
       vpsid: vpsId,
-      key: this.key,
-      pass: this.pass,
+      adminapikey: this.adminapikey,
+      adminapipass: this.adminapipass,
     };
 
     const path = `/index.php${this.buildQueryString(queryParams)}&action=vs`;
@@ -422,8 +417,8 @@ async ListVPS({
     const queryParams = {
       act: Actions.GetVPSRam,
       changeserid: vpsId,
-      key: this.key,
-      pass: this.pass,
+      adminapikey: this.adminapikey,
+      adminapipass: this.adminapipass,
     };
 
     const path = `/index.php${this.buildQueryString(queryParams)}`;
@@ -449,18 +444,15 @@ async ListVPS({
     const queryParams = {
       act: Actions.GetVPSCPU,
       changeserid: vpsId,
-      key: this.key,
-      pass: this.pass,
+      adminapikey: this.adminapikey,
+      adminapipass: this.adminapipass,
     };
 
     const path = `/index.php${this.buildQueryString(queryParams)}`;
 
     try {
       const res = await this.makeHttpRequest(path);
-      return Promise.resolve({
-        cpu: res.cpu,
-        time_taken: res.time_taken,
-      });
+      return res;
     } catch (err) {
       return Promise.reject(err);
     }
@@ -476,8 +468,8 @@ async ListVPS({
     const queryParams = {
       act: Actions.GetVPSDisk,
       changeserid: vpsId,
-      key: this.key,
-      pass: this.pass,
+      adminapikey: this.adminapikey,
+      adminapipass: this.adminapipass,
     };
 
     const path = `/index.php${this.buildQueryString(queryParams)}`;
@@ -502,8 +494,8 @@ async ListVPS({
   async GetServerBandwidth(month) {
     const queryParams = {
       act: Actions.GetServerBandwidth,
-      key: this.key,
-      pass: this.pass,
+      adminapikey: this.adminapikey,
+      adminapipass: this.adminapipass,
     };
 
     const path = `/index.php${this.buildQueryString(queryParams)}`;
@@ -522,8 +514,8 @@ async ListVPS({
   async GetPlans() {
     const queryParams = {
       act: Actions.GetPlans,
-      key: this.key,
-      pass: this.pass,
+      adminapikey: this.adminapikey,
+      adminapipass: this.adminapipass,
     };
 
     const path = `/index.php${this.buildQueryString(queryParams)}`;
