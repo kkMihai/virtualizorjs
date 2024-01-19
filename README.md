@@ -4,7 +4,7 @@ Since there is no SDK's for Node.js for the Virtualizor API, I decided to create
 
 VirtualizorJS simplifies the management of Virtualizor servers with a streamlined and developer-friendly API for Node.js. Perform actions such as creating, starting, stopping, and restarting virtual servers effortlessly. Ideal for seamless integration into your Node.js applications, providing a powerful toolkit for Virtualizor server management.
 
-[![npm version](https://badge.fury.io/js/virtualizorjs.svg)](https://badge.fury.io/js/virtualizorjs)
+[![npm version](https://badge.fury.io/js/virtualizorjs.png)](https://badge.fury.io/js/virtualizorjs)
 
 ## Important
  - As of `19 January 2024` Not all Virtualizor API functions are tested fully. ( i m busy (just lazy lmao))
