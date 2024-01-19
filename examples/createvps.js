@@ -1,4 +1,4 @@
-const VirtualizorClient = require("../src/VirtualizorClient");
+const VirtualizorClient = require("virtualizorjs");
 
 const { CreateVPS } = new VirtualizorClient({
   host: "< IP or Hostname of Virtualizor Server >",
