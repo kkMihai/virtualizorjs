@@ -22,7 +22,7 @@
     "fast"
   ],
   "publishConfig": {
-    "@kkmihai:registry": "https://npm.pkg.github.com"
+    "@kkMihai:registry": "https://npm.pkg.github.com"
   },
   "author": "kkMihai",
   "license": "MIT",
