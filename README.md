@@ -107,6 +107,7 @@ eventOn('vpsRestarted', (response) => {
 ## Documentation
 
 - Check the [Wiki](https://github.com/kkMihai/virtualizorjs/wiki) for detailed documentation.
+- If you use frameworks such as [Next.js](https://nextjs.org/) make sure to use it only Server-Side for security reasons.
 
 ## Roadmap
   - [ ] Add Proxmox KVM Support
