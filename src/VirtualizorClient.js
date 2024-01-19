@@ -16,14 +16,12 @@ const Actions = require("./actions");
 /**
  * @class VirtualizorClient
  * @description - This class is used to make http requests to Virtualizor API
- * @version 1.0.0-beta
  * @author kkMihai <kkmihai@duck.com>
- * @param {Object} optionsv - Options for VirtualizorClient
- * @param {String} options.host - Hostname of the Virtualizor server (IP or domain)
- * @param {String} options.port - Port of the Virtualizor server (default: 4083)
- * @param {String} options.key - API key
- * @param {String} options.pass - API password
- * @param {Boolean} options.isRawResponse - If true, the response will be the raw response from the API, Recommended to set this to false
+ * @param {String} host - Hostname of the Virtualizor server (IP or domain)
+ * @param {String} port - Port of the Virtualizor server (default: 4083)
+ * @param {String} key - API key
+ * @param {String} pass - API password
+ * @param {Boolean} isRawResponse - If true, the response will be the raw response from the API, Recommended to set this to false
  * @returns {VirtualizorClient} VirtualizorClient
  */
 
@@ -62,6 +60,11 @@ class VirtualizorClient extends EventEmitter {
    */
   buildQueryString(params) {
     params.api = "json";
+    Object.keys(params).forEach((key) => {
+      if (params[key] === undefined) {
+        delete params[key];
+      }
+    });
     const queryParams = new URLSearchParams(params);
     return `?${queryParams.toString()}`;
   }
@@ -90,7 +93,9 @@ class VirtualizorClient extends EventEmitter {
     return new Promise((resolve, reject) => {
       const req = https.request(options, (res) => {
         let data = "";
-
+      
+        console.log(req.path);
+            
         res.on("data", (chunk) => {
           data += chunk;
         });
@@ -251,7 +256,7 @@ class VirtualizorClient extends EventEmitter {
  * @param {Number} [page] - Page number, each page show 50 records
  * @memberof VirtualizorClient
  */
-async ListVPS(
+async ListVPS({
   vpsid,
   vpsname,
   vpsip,
@@ -266,7 +271,7 @@ async ListVPS(
   bpid,
   reslen,
   page
-) {
+}) {
   const queryParams = {
     act: Actions.ListVPS,
     key: this.key,
@@ -287,7 +292,7 @@ async ListVPS(
     page,
   };
 
-  const path = `/index.php${this.buildQueryString(queryParams)}`;
+  const path = `/index.php${this.buildQueryString(queryParams)}&search=Search`;
 
   try {
     const res = await this.makeHttpRequest(path, "POST");
