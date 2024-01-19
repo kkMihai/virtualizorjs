@@ -3,6 +3,7 @@
   "version": "1.0.0-beta",
   "description": "VirtualizorJS simplifies the management of Virtualizor servers with a streamlined and developer-friendly API for Node.js. Perform actions such as creating, starting, stopping, and restarting virtual servers effortlessly. Ideal for seamless integration into your Node.js applications, providing a powerful toolkit for Virtualizor server management.",
   "main": "/src/VirtualizorClient.js",
+  "scripts": {},
   "keywords": [
     "virtualizor",
     "api",
@@ -29,7 +30,7 @@
   "github": "https://github.com/kkMihai/virtualizorjs",
   "repository": {
     "type": "git",
-    "url": "https://github.com/kkMihai/virtualizorjs.git"
+    "url": "git+https://github.com/kkMihai/virtualizorjs.git"
   },
   "bugs": {
     "url": "https://github.com/kkMihai/virtualizorjs/issues"
