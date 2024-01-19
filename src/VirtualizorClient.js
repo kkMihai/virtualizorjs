@@ -18,23 +18,23 @@ const Actions = require("./actions");
  * @description - This class is used to make http requests to Virtualizor API
  * @version 1.0.0
  * @author kkMihai <kkmihai@duck.com>
- * @param {Object} options
- * @param {String} options.host
- * @param {String} options.port
- * @param {String} options.key
- * @param {String} options.pass
- * @param {Boolean} options.isRawResponse
+ * @param {Object} optionsv - Options for VirtualizorClient
+ * @param {String} options.host - Hostname of the Virtualizor server (IP or domain)
+ * @param {String} options.port - Port of the Virtualizor server (default: 4083)
+ * @param {String} options.key - API key
+ * @param {String} options.pass - API password
+ * @param {Boolean} options.isRawResponse - If true, the response will be the raw response from the API, Recommended to set this to false
  * @returns {VirtualizorClient} VirtualizorClient
  */
 
 class VirtualizorClient extends EventEmitter {
-  constructor({ host, port, key, pass, isRawResponse }) {
+  constructor({ host, port, key, pass, isRawResponse = false }) {
     super();
     this.host = host;
     this.port = port;
     this.key = key;
     this.pass = pass;
-    this.isRawResponse = isRawResponse || false;
+    this.isRawResponse = isRawResponse
 
     /**
      * @description - Bind Methods
@@ -49,7 +49,7 @@ class VirtualizorClient extends EventEmitter {
     this.GetVPSRam = this.GetVPSRam.bind(this);
     this.GetVPSCPU = this.GetVPSCPU.bind(this);
     this.GetVPSDisk = this.GetVPSDisk.bind(this);
-    this.GetVPSBandwidth = this.GetVPSBandwidth.bind(this);
+    this.GetServerBandwidth = this.GetServerBandwidth.bind(this);
     this.GetPlans = this.GetPlans.bind(this);
   }
 
@@ -67,7 +67,7 @@ class VirtualizorClient extends EventEmitter {
   }
 
   /**
-   * @description - This method is used to make http request and should not be used externally
+   * @description - This method is used to make http/s request and should not be used externally
    * @param {String} path
    * @param {String} method
    * @param {String} postData
@@ -103,7 +103,6 @@ class VirtualizorClient extends EventEmitter {
             reject(error);
           }
         });
-
       });
 
       req.on("error", (error) => {
@@ -121,6 +120,7 @@ class VirtualizorClient extends EventEmitter {
   /**
    * @description - This method is used to create a new virtual server
    * @param {Object} params - Parameters for creating a new virtual server
+   * @param {Object | String} params.storageSpace - Format { Size: Number, st_uuid: String }
    * @returns {Promise} Promise
    * @memberof VirtualizorClient
    */
@@ -138,6 +138,21 @@ class VirtualizorClient extends EventEmitter {
     bandwidthLimit,
     cpuCores,
   }) {
+    /**
+     * @description - This method is used to handle storage space parameter, This in GB
+     * @param {Array|Number} space
+     * @returns {Number | Promise} Promise
+     * @memberof VirtualizorClient
+     * @private
+     */
+
+    function handleDiskSpace(space) {
+      if (Array.isArray(space)) {
+        return space.reduce((acc, curr) => acc + curr, 0);
+      }
+      return space;
+    }
+
     const queryParams = {
       action: Actions.AddVPS,
       virt: virtualizationType,
@@ -148,7 +163,7 @@ class VirtualizorClient extends EventEmitter {
       root_pass: rootPassword,
       os_id: osId,
       ips: ipAddress,
-      space: storageSpace,
+      space: handleDiskSpace(storageSpace),
       ram: serverRam,
       bandwidth: bandwidthLimit,
       cores: cpuCores,
@@ -179,8 +194,7 @@ class VirtualizorClient extends EventEmitter {
   async GetVPS(id) {
     const queryParams = {
       act: Actions.VPSManage,
-      svs: id,
-
+      changeserid: id,
       key: this.key,
       pass: this.pass,
     };
@@ -216,52 +230,99 @@ class VirtualizorClient extends EventEmitter {
   }
 
   /**
-   * @description - This method is used to list all virtual servers
-   * @returns {Promise} Promise
-   * @memberof VirtualizorClient
-   */
-  async ListVPS() {
-    const queryParams = {
-      act: Actions.ListVPS,
-      key: this.key,
-      pass: this.pass,
-    };
+ * @description - This method is used to list all virtual servers
+ * @returns {Promise} Promise
+ * @param {Number} [vpsid] - Search using id
+ * @param {String} [vpsname] - Search using vid
+ * @param {String} [vpsip] - Results will be returned on the basis of the ip
+ * @param {String} [vpshostname] - VPS is searched on the basis of the hostname passed
+ * @param {String} [vpsstatus] - VPS is searched on the basis of the status of the vps
+ *   (type 's' for suspended, type 'u' for unsuspended)
+ * @param {String} [vstype] - VPS is searched on the basis of the type of virtualization,
+ *   refer below table for valid values
+ * @param {String} [speedcap] - VPS is searched on the basis of the type of speed cap
+ *   (type 1 for enabled, 2 for disabled)
+ * @param {String} [user] - Search for the vps according to the user
+ * @param {String} [vsgid] - Search for the vps according to the server group
+ * @param {String} [vserid] - VPS is searched on the basis of the server
+ * @param {String} [plid] - VPS is searched on the basis of plan that it has been assigned
+ * @param {String} [bpid] - VPS is searched on the basis of backup plan that it has been assigned
+ * @param {Number} [reslen] - Number of records to be returned, default is 50
+ * @param {Number} [page] - Page number, each page show 50 records
+ * @memberof VirtualizorClient
+ */
+async ListVPS(
+  vpsid,
+  vpsname,
+  vpsip,
+  vpshostname,
+  vpsstatus,
+  vstype,
+  speedcap,
+  user,
+  vsgid,
+  vserid,
+  plid,
+  bpid,
+  reslen,
+  page
+) {
+  const queryParams = {
+    act: Actions.ListVPS,
+    key: this.key,
+    pass: this.pass,
+    vpsid,
+    vpsname,
+    vpsip,
+    vpshostname,
+    vpsstatus,
+    vstype,
+    speedcap,
+    user,
+    vsgid,
+    vserid,
+    plid,
+    bpid,
+    reslen,
+    page,
+  };
 
-    const path = `/index.php${this.buildQueryString(queryParams)}`;
+  const path = `/index.php${this.buildQueryString(queryParams)}`;
 
-    try {
-      const res = await this.makeHttpRequest(path);
-      let resData = res;
+  try {
+    const res = await this.makeHttpRequest(path, "POST");
+    let resData = res;
 
-      if (!this.isRawResponse && res.data.vs) {
-        resData = Object.keys(res.data.vs).reduce((acc, key) => {
-          const vps = res.data.vs[key];
+    if (!this.isRawResponse && res.data.vs) {
+      resData = Object.keys(res.data.vs).reduce((acc, key) => {
+        const vps = res.data.vs[key];
 
-          if (vps && vps.vpsid && vps.hostname && vps.os_name) {
-            acc.push({
-              id: vps.vpsid,
-              name: vps.vps_name,
-              hostname: vps.hostname,
-              os: vps.os_name,
-              cores: vps.cores,
-              ram: vps.ram,
-              space: vps.space,
-              bandwidth: vps.bandwidth,
-              serverName: vps.server_name,
-              status: vps.status,
-              ip: vps.ips,
-            });
-          }
+        if (vps && vps.vpsid && vps.hostname && vps.os_name) {
+          acc.push({
+            id: vps.vpsid,
+            name: vps.vps_name,
+            hostname: vps.hostname,
+            os: vps.os_name,
+            cores: vps.cores,
+            ram: vps.ram,
+            space: vps.space,
+            bandwidth: vps.bandwidth,
+            serverName: vps.server_name,
+            status: vps.status,
+            ip: vps.ips,
+          });
+        }
 
-          return acc;
-        }, []);
-      }
-
-      return Promise.resolve(resData);
-    } catch (err) {
-      return Promise.reject(err);
+        return acc;
+      }, []);
     }
+
+    return Promise.resolve(resData);
+  } catch (err) {
+    return Promise.reject(err);
   }
+}
+
 
   /**
    * @description - This method is used to start a virtual server
@@ -272,14 +333,12 @@ class VirtualizorClient extends EventEmitter {
   async StartVPS(vpsId) {
     const queryParams = {
       act: Actions.StartVPS,
-      do: 1,
-
-      svs: vpsId,
+      vpsid: vpsId,
       key: this.key,
       pass: this.pass,
     };
 
-    const path = `/index.php${this.buildQueryString(queryParams)}`;
+    const path = `/index.php${this.buildQueryString(queryParams)}&action=vs`;
 
     try {
       const res = await this.makeHttpRequest(path);
@@ -302,14 +361,12 @@ class VirtualizorClient extends EventEmitter {
   async StopVPS(vpsId) {
     const queryParams = {
       act: Actions.StopVPS,
-      do: 1,
-
-      svs: vpsId,
+      vpsid: vpsId,
       key: this.key,
       pass: this.pass,
     };
 
-    const path = `/index.php${this.buildQueryString(queryParams)}`;
+    const path = `/index.php${this.buildQueryString(queryParams)}&action=vs`;
 
     try {
       const res = await this.makeHttpRequest(path);
@@ -332,14 +389,12 @@ class VirtualizorClient extends EventEmitter {
   async RestartVPS(vpsId) {
     const queryParams = {
       act: Actions.RestartVPS,
-      do: 1,
-
-      svs: vpsId,
+      vpsid: vpsId,
       key: this.key,
       pass: this.pass,
     };
 
-    const path = `/index.php${this.buildQueryString(queryParams)}`;
+    const path = `/index.php${this.buildQueryString(queryParams)}&action=vs`;
 
     try {
       const res = await this.makeHttpRequest(path);
@@ -362,8 +417,7 @@ class VirtualizorClient extends EventEmitter {
   async GetVPSRam(vpsId) {
     const queryParams = {
       act: Actions.GetVPSRam,
-
-      svs: vpsId,
+      changeserid: vpsId,
       key: this.key,
       pass: this.pass,
     };
@@ -390,8 +444,7 @@ class VirtualizorClient extends EventEmitter {
   async GetVPSCPU(vpsId) {
     const queryParams = {
       act: Actions.GetVPSCPU,
-
-      svs: vpsId,
+      changeserid: vpsId,
       key: this.key,
       pass: this.pass,
     };
@@ -418,8 +471,7 @@ class VirtualizorClient extends EventEmitter {
   async GetVPSDisk(vpsId) {
     const queryParams = {
       act: Actions.GetVPSDisk,
-
-      svs: vpsId,
+      changeserid: vpsId,
       key: this.key,
       pass: this.pass,
     };
@@ -439,15 +491,13 @@ class VirtualizorClient extends EventEmitter {
 
   /**
    * @description - This method is used to get bandwidth information of a virtual server
-   * @param {String} vpsId - ID of the virtual server
-   * @param {String} month - Month for which bandwidth information is requested
+   * @param {String} month - Month for which bandwidth information is required (YYYY-MM)
    * @returns {Promise} Promise
    * @memberof VirtualizorClient
    */
-  async GetVPSBandwidth(vpsId, month) {
+  async GetServerBandwidth(month) {
     const queryParams = {
-      act: Actions.GetVPSBandwidth,
-      svs: vpsId,
+      act: Actions.GetServerBandwidth,
       key: this.key,
       pass: this.pass,
     };
@@ -455,7 +505,7 @@ class VirtualizorClient extends EventEmitter {
     const path = `/index.php${this.buildQueryString(queryParams)}`;
 
     try {
-      const res = await this.makeHttpRequest(path, "POST", `show=${month}`);
+      const res = await this.makeHttpRequest(path, "GET", `show=${month}`);
       return Promise.resolve({
         bandwidth: res.bandwidth,
         time_taken: res.time_taken,
@@ -471,9 +521,9 @@ class VirtualizorClient extends EventEmitter {
       key: this.key,
       pass: this.pass,
     };
-  
+
     const path = `/index.php${this.buildQueryString(queryParams)}`;
-  
+
     try {
       const res = await this.makeHttpRequest(path);
       return Promise.resolve(res);

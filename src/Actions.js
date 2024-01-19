@@ -1,5 +1,5 @@
 /**
- * Enum representing various actions for Virtualizor API.
+ * @description Actions that can be performed on the server. Made available as an enum incase the API changes.
  * @enum {string}
  * @readonly
  */
@@ -20,7 +20,7 @@ module.exports = {
    * Action to list all VPS.
    * @type {string}
    */
-  ListVPS: "listvs",
+  ListVPS: "vs",
 
   /**
    * Action to start a VPS.
@@ -59,10 +59,15 @@ module.exports = {
   GetVPSDisk: "disk",
 
   /**
-   * Action to get VPS bandwidth information.
+   * Action to get Server Bandwidth information.
    * @type {string}
    */
-  GetVPSBandwidth: "bandwidth",
+  GetServerBandwidth: "bandwidth",
+
+  /**
+   *  Action to get VPS Bandwidth information.
+   *  @type {string}
+   */
 
   GetPlans: "plans",
 };
