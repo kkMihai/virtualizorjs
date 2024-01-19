@@ -93,8 +93,7 @@ class VirtualizorClient extends EventEmitter {
     return new Promise((resolve, reject) => {
       const req = https.request(options, (res) => {
         let data = "";
-      
-        console.log(req.path);
+    
             
         res.on("data", (chunk) => {
           data += chunk;
