@@ -27,27 +27,77 @@ npm i virtualizorjs@latest
 const VirtualizorClient = require('virtualizorjs');
 
 // Initialize VirtualizorClient
-const { ListVPS  } = new VirtualizorClient({
+const { ListVPS } = new VirtualizorClient({
   host: '< IP or Hostname of Virtualizor Server >',
   port: 4083,
   key: "< Your API KEY >",
   pass: "< Your API PASS >",
 });
 
-
+// Using const client = new VirtualizorClient({ ... }) is also valid, but you will have to use client.ListVPS() instead of ListVPS() which just looks ugly.
 // Example: Get a list of all VPSs
 ListVPS().then((data) => {
   console.log(data);
 }).catch((err) => {
   console.log(err);
 });
-
 ```
+
+# Event Handling Usage
+
+VirtualizorJS uses the [EventEmitter](https://nodejs.org/api/events.html) class to handle events. You can attach **`Event Listeners`** to different events provided by the VirtualizorClient.
+
+- Note: We define the "on" method as "eventOn" to avoid confusion with the EventEmitter's "on" method, However you can do it however you want this is just an example.
+
+```javascript
+const VirtualizorClient = require('virtualizorjs'); 
+
+// We define the "on" method as "eventOn" to avoid confusion with the EventEmitter's "on" method, However you can do it however you want this is just an example.
+// The "eventOn" method is used to attach Event Listeners to different events provided by the VirtualizorClient.
+const { on: eventOn } = new VirtualizorClient({
+  host: '< IP or Hostname of Virtualizor Server >',
+  port: 4083,
+  key: "< Your API KEY >",
+  pass: "< Your API PASS >",
+});
+
+// - Event Types - :
+// 1. vpsCreated
+// 2. vpsStarted
+// 3. vpsStopped
+// 4. vpsRestarted
+
+// Event listener for when a virtual server is created
+eventOn('vpsCreated', (response) => {
+  console.log(`Virtual Server Created! Details:`, response);
+});
+
+// Event listener for when a virtual server is started
+eventOn('vpsStarted', (response) => {
+  console.log(`Virtual Server Started! Details:`, response);
+});
+
+// Event listener for when a virtual server is stopped
+eventOn('vpsStopped', (response) => {
+  console.log(`Virtual Server Stopped! Details:`, response);
+});
+
+// Event listener for when a virtual server is restarted
+eventOn('vpsRestarted', (response) => {
+  console.log(`Virtual Server Restarted! Details:`, response);
+});
+```
+
+##❓ What's the point of using **`Event Listeners`**?
+ - **`Event Listeners`** are useful when you want to perform an action when a certain event occurs without modifying the source code of the **`VirtualizorJS`** library to avoid breaking changes.
+ - For example, you can use **`Event Listeners`** to send a notification to your `users` when a event is triggered.
+ - You can also use **`Event Listeners`** to perform an action when a event is triggered.
 
 ## Examples
 
 - [Get VPS's List](/examples/listvps.js)
 - [Create VPS](/examples/createvps.js)
+- [Using Event Handling](/examples/eventhandling.js)
 
 
 ## Documentation
