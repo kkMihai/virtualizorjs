@@ -293,8 +293,8 @@ async ListVPS(
     const res = await this.makeHttpRequest(path, "POST");
     let resData = res;
 
-    if (!this.isRawResponse && res.data.vs) {
-      resData = Object.keys(res.data.vs).reduce((acc, key) => {
+    if (!this.isRawResponse && res.data) {
+      resData = Object.keys(res.data).reduce((acc, key) => {
         const vps = res.data.vs[key];
 
         if (vps && vps.vpsid && vps.hostname && vps.os_name) {
