@@ -1,6 +1,6 @@
 # VirtualizorJS
 
-Since there is no SDK's for Node.js for the Virtualizor API, I decided to create one, and one that is actually easy to use and useful with **0 Dependencies** keeping it lightweight and fast.
+Since there is no SDK's for Node.js for the Virtualizor API, I decided to create one, and one that is actually easy to use and useful with **0 Dependencies** keeping it `Lightweight` and `Fast`.
 
 VirtualizorJS simplifies the management of Virtualizor servers with a streamlined and developer-friendly API for Node.js. Perform actions such as creating, starting, stopping, and restarting virtual servers effortlessly. Ideal for seamless integration into your Node.js applications, providing a powerful toolkit for Virtualizor server management.
 
@@ -102,11 +102,11 @@ eventOn('vpsRestarted', (response) => {
 
 ## Documentation
 
-- Check the [Wiki](https://github.com/kkMihai/virtualizorjs/wiki/VirtualizorClient-Class) for detailed documentation.
+- Check the [Wiki](https://github.com/kkMihai/virtualizorjs/wiki) for detailed documentation.
 
 ## Contributing
 
-- Feel free to contribute by opening issues or submitting pull requests. See [CONTRIBUTING.md](/CONTRIBUTING.md) for details.
+- Feel free to contribute by opening issues or submitting pull requests. See [CONTRIBUTING](/CONTRIBUTING.md) for details.
 
 ## License
 
