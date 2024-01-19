@@ -7,7 +7,7 @@ VirtualizorJS simplifies the management of Virtualizor servers with a streamline
 [![npm version](https://badge.fury.io/js/virtualizorjs.png)](https://badge.fury.io/js/virtualizorjs)
 
 ## Important
- - As of `19 January 2024` Not all Virtualizor API functions are tested fully. ( i m busy (just lazy lmao))
+ - This library is still in development and there is more to add but for now it's stable and ready to use, all the methods have been tested and work as expected.
 
 ## Table of Contents
 - [Installation](#installation)

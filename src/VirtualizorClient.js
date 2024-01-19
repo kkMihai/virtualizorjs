@@ -47,7 +47,7 @@ class VirtualizorClient extends EventEmitter {
     this.GetVPSRam = this.GetVPSRam.bind(this);
     this.GetVPSCPU = this.GetVPSCPU.bind(this);
     this.GetVPSDisk = this.GetVPSDisk.bind(this);
-    this.GetServerBandwidth = this.GetServerBandwidth.bind(this);
+    this.GetVPSBandwidth = this.GetVPSBandwidth.bind(this);
     this.GetPlans = this.GetPlans.bind(this);
   }
 
@@ -71,9 +71,9 @@ class VirtualizorClient extends EventEmitter {
 
   /**
    * @description - This method is used to make http/s request and should not be used externally
-   * @param {String} path
-   * @param {String} method
-   * @param {String} postData
+   * @param {String} path - Path of the request
+   * @param {String} method - Method of the request
+   * @param {String} postData - This is used to send data in POST request in the form of query string
    * @returns {Promise} Promise
    * @memberof VirtualizorClient
    * @private
@@ -197,6 +197,7 @@ class VirtualizorClient extends EventEmitter {
    * @param {String} id - ID of the virtual server
    * @returns {Promise} Promise
    * @memberof VirtualizorClient
+   * @Tested - Yes
    */
   async GetVPS(id) {
     const queryParams = {
@@ -231,92 +232,29 @@ class VirtualizorClient extends EventEmitter {
   /**
  * @description - This method is used to list all virtual servers
  * @returns {Promise} Promise
- * @param {Number} [vpsid] - Search using id
- * @param {String} [vpsname] - Search using vid
- * @param {String} [vpsip] - Results will be returned on the basis of the ip
- * @param {String} [vpshostname] - VPS is searched on the basis of the hostname adminapipassed
- * @param {String} [vpsstatus] - VPS is searched on the basis of the status of the vps
- *   (type 's' for suspended, type 'u' for unsuspended)
- * @param {String} [vstype] - VPS is searched on the basis of the type of virtualization,
- *   refer below table for valid values
- * @param {String} [speedcap] - VPS is searched on the basis of the type of speed cap
- *   (type 1 for enabled, 2 for disabled)
- * @param {String} [user] - Search for the vps according to the user
- * @param {String} [vsgid] - Search for the vps according to the server group
- * @param {String} [vserid] - VPS is searched on the basis of the server
- * @param {String} [plid] - VPS is searched on the basis of plan that it has been assigned
- * @param {String} [bpid] - VPS is searched on the basis of backup plan that it has been assigned
- * @param {Number} [reslen] - Number of records to be returned, default is 50
- * @param {Number} [page] - Page number, each page show 50 records
  * @memberof VirtualizorClient
+ * @Tested - Yes
  */
-async ListVPS({
-  vpsid,
-  vpsname,
-  vpsip,
-  vpshostname,
-  vpsstatus,
-  vstype,
-  speedcap,
-  user,
-  vsgid,
-  vserid,
-  plid,
-  bpid,
-  reslen,
-  page
-}) {
+async ListVPS() {
   const queryParams = {
-    act: Actions.ListVPS,
-    apiadminapikey: this.adminapikey,
-    apiadminapipass: this.adminapipass,
-    vpsid,
-    vpsname,
-    vpsip,
-    vpshostname,
-    vpsstatus,
-    vstype,
-    speedcap,
-    user,
-    vsgid,
-    vserid,
-    plid,
-    bpid,
-    reslen,
-    page,
+    act: Actions.GetVPS,
+    adminapikey: this.adminapikey,
+    adminapipass: this.adminapipass,
   };
 
-  const path = `/index.php${this.buildQueryString(queryParams)}&search=Search`;
+  const path = `/index.php${this.buildQueryString(queryParams)}`;
 
   try {
-    const res = await this.makeHttpRequest(path, "POST");
+
+    const res = await this.makeHttpRequest(path, "GET");
     let resData = res;
 
-    if (!this.isRawResponse && res.data) {
-      resData = Object.adminapikeys(res.data).reduce((acc, adminapikey) => {
-        const vps = res.data.vs[adminapikey];
-
-        if (vps && vps.vpsid && vps.hostname && vps.os_name) {
-          acc.push({
-            id: vps.vpsid,
-            name: vps.vps_name,
-            hostname: vps.hostname,
-            os: vps.os_name,
-            cores: vps.cores,
-            ram: vps.ram,
-            space: vps.space,
-            bandwidth: vps.bandwidth,
-            serverName: vps.server_name,
-            status: vps.status,
-            ip: vps.ips,
-          });
-        }
-
-        return acc;
-      }, []);
+    if (!this.isRawResponse) {
+      resData = res.vs
     }
 
     return Promise.resolve(resData);
+
   } catch (err) {
     return Promise.reject(err);
   }
@@ -328,24 +266,32 @@ async ListVPS({
    * @param {String} vpsId - ID of the virtual server
    * @returns {Promise} Promise
    * @memberof VirtualizorClient
+   * @Tested - Yes
    */
   async StartVPS(vpsId) {
     const queryParams = {
-      act: Actions.StartVPS,
+      action: Actions.StartVPS,
       vpsid: vpsId,
       adminapikey: this.adminapikey,
       adminapipass: this.adminapipass,
     };
 
-    const path = `/index.php${this.buildQueryString(queryParams)}&action=vs`;
+    const path = `/index.php${this.buildQueryString(queryParams)}`;
 
     try {
-      const res = await this.makeHttpRequest(path);
+
+      if (!vpsId) {
+        return Promise.reject(new Error("vpsid is required"));
+      }
+
+      const res = await this.makeHttpRequest(path, "GET", `act=vs`);
       this.emit("vpsStarted", res);
+
       return Promise.resolve({
-        message: res.done && res.done.msg,
-        time_taken: res.time_taken,
-      });
+        message: res.done && res.done_msg,
+        error: res.error_msg || false
+      })
+
     } catch (err) {
       return Promise.reject(err);
     }
@@ -356,24 +302,25 @@ async ListVPS({
    * @param {String} vpsId - ID of the virtual server
    * @returns {Promise} Promise
    * @memberof VirtualizorClient
+   * @Tested - Yes
    */
   async StopVPS(vpsId) {
     const queryParams = {
-      act: Actions.StopVPS,
+      action: Actions.StopVPS,
       vpsid: vpsId,
       adminapikey: this.adminapikey,
       adminapipass: this.adminapipass,
     };
 
-    const path = `/index.php${this.buildQueryString(queryParams)}&action=vs`;
+    const path = `/index.php${this.buildQueryString(queryParams)}`;
 
     try {
-      const res = await this.makeHttpRequest(path);
+      const res = await this.makeHttpRequest(path, "GET", `act=vs`);
       this.emit("vpsStopped", res);
       return Promise.resolve({
-        message: res.done && res.done.msg,
-        time_taken: res.time_taken,
-      });
+        message: res.done && res.done_msg,
+        error: res.error_msg || false,
+      })
     } catch (err) {
       return Promise.reject(err);
     }
@@ -387,21 +334,21 @@ async ListVPS({
    */
   async RestartVPS(vpsId) {
     const queryParams = {
-      act: Actions.RestartVPS,
+      action: Actions.RestartVPS,
       vpsid: vpsId,
       adminapikey: this.adminapikey,
       adminapipass: this.adminapipass,
     };
 
-    const path = `/index.php${this.buildQueryString(queryParams)}&action=vs`;
+    const path = `/index.php${this.buildQueryString(queryParams)}`;
 
     try {
-      const res = await this.makeHttpRequest(path);
+      const res = await this.makeHttpRequest(path, "GET", `act=vs`);
       this.emit("vpsRestarted", res);
       return Promise.resolve({
-        message: res.done && res.done.msg,
-        time_taken: res.time_taken,
-      });
+        message: res.done && res.done_msg,
+        error: res.error_msg || false
+      })
     } catch (err) {
       return Promise.reject(err);
     }
@@ -416,7 +363,7 @@ async ListVPS({
   async GetVPSRam(vpsId) {
     const queryParams = {
       act: Actions.GetVPSRam,
-      changeserid: vpsId,
+      svs: vpsId,
       adminapikey: this.adminapikey,
       adminapipass: this.adminapipass,
     };
@@ -443,7 +390,7 @@ async ListVPS({
   async GetVPSCPU(vpsId) {
     const queryParams = {
       act: Actions.GetVPSCPU,
-      changeserid: vpsId,
+      svs: vpsId,
       adminapikey: this.adminapikey,
       adminapipass: this.adminapipass,
     };
@@ -452,7 +399,11 @@ async ListVPS({
 
     try {
       const res = await this.makeHttpRequest(path);
-      return res;
+
+      return Promise.resolve({
+        cpu: res.cpu,
+        time_taken: res.time_taken,
+      });
     } catch (err) {
       return Promise.reject(err);
     }
@@ -476,10 +427,13 @@ async ListVPS({
 
     try {
       const res = await this.makeHttpRequest(path);
+      
       return Promise.resolve({
-        disk: res.disk,
+        info: res.disk,
         time_taken: res.time_taken,
       });
+
+
     } catch (err) {
       return Promise.reject(err);
     }
@@ -487,13 +441,15 @@ async ListVPS({
 
   /**
    * @description - This method is used to get bandwidth information of a virtual server
+   * @param {String} vpsId - ID of the virtual server
    * @param {String} month - Month for which bandwidth information is required (YYYY-MM)
    * @returns {Promise} Promise
    * @memberof VirtualizorClient
    */
-  async GetServerBandwidth(month) {
+  async GetVPSBandwidth({vpsId, month}) {
     const queryParams = {
       act: Actions.GetServerBandwidth,
+      changeserid: vpsId,
       adminapikey: this.adminapikey,
       adminapipass: this.adminapipass,
     };
@@ -522,7 +478,10 @@ async ListVPS({
 
     try {
       const res = await this.makeHttpRequest(path);
-      return Promise.resolve(res);
+      return Promise.resolve({
+        plans: res.plans,
+        time_taken: res.time_taken,
+      });
     } catch (err) {
       return Promise.reject(err);
     }
