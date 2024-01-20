@@ -2,7 +2,7 @@ const VirtualizorClient = require('virtualizorjs');
 
 const { on: eventOn } = new VirtualizorClient({
   host: '< IP or Hostname of Virtualizor Server >',
-  port: 4083,
+  port: 4085,
   adminapikey: "< Your API KEY >",
   adminapipass: "< Your API PASS >",
 });

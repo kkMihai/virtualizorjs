@@ -18,7 +18,7 @@ const Actions = require("./actions");
  * @description - This class is used to make http requests to Virtualizor API
  * @author kkMihai <kkmihai@duck.com>
  * @param {String} host - Hostname of the Virtualizor server (IP or domain)
- * @param {String} port - Port of the Virtualizor server (default: 4083)
+ * @param {String} port - Port of the Virtualizor server (default: 4085)
  * @param {String} adminapikey - API admin api key
  * @param {String} adminapipass - API admin api pass
  * @param {Boolean} isRawResponse - If true, the response will be the raw response from the API, Recommended to set this to false

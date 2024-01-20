@@ -20,7 +20,23 @@
     "easy",
     "simple",
     "powerful",
-    "fast"
+    "fast",
+    "quick",
+    "react",
+    "vue",
+    "angular",
+    "express",
+    "node",
+    "nextjs",
+    "nuxtjs",
+    "svelte",
+    "electron",
+    "server",
+    "client",
+    "library",
+    "package",
+    "module",
+    "npm"
   ],
   "publishConfig": {
     "@kkMihai:registry": "https://npm.pkg.github.com"
@@ -35,6 +51,7 @@
   "bugs": {
     "url": "https://github.com/kkMihai/virtualizorjs/issues"
   },
+  "wiki": "https://github.com/kkMihai/virtualizorjs/wiki",
   "homepage": "https://github.com/kkMihai/virtualizorjs#readme",
   "engines": {
     "node": ">=12.0.0"
