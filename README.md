@@ -51,19 +51,20 @@ ListVPS().then((data) => {
 
 VirtualizorJS uses the [EventEmitter](https://nodejs.org/api/events.html) class to handle events. You can attach **`Event Listeners`** to different events provided by the VirtualizorClient.
 
-- Note: We define the "on" method as "eventOn" to avoid confusion with the EventEmitter's "on" method, However you can do it however you want this is just an example.
+- Note: To use **`Event Listeners`** we need to define the **`VirtualizorClient`** as a `const` named preferably **`Client`** and then use **`Client.on()`** to attach **`Event Listeners`** to different events.
 
 ```javascript
 const VirtualizorClient = require('virtualizorjs'); 
 
-// We define the "on" method as "eventOn" to avoid confusion with the EventEmitter's "on" method, However you can do it however you want this is just an example.
-// The "eventOn" method is used to attach Event Listeners to different events provided by the VirtualizorClient.
-const { on: eventOn } = new VirtualizorClient({
+const Client = new VirtualizorClient({
   host: '< IP or Hostname of Virtualizor Server >',
   port: 4085,
   adminapikey: "< Your API KEY >",
   adminapipass: "< Your API PASS >",
 });
+
+//Get the methods you need
+const { StartVPS } = Client;
 
 // - Event Types - :
 // 1. vpsCreated
@@ -72,22 +73,22 @@ const { on: eventOn } = new VirtualizorClient({
 // 4. vpsRestarted
 
 // Event listener for when a virtual server is created
-eventOn('vpsCreated', (response) => {
+Client.on('vpsCreated', (response) => {
   console.log(`Virtual Server Created! Details:`, response);
 });
 
 // Event listener for when a virtual server is started
-eventOn('vpsStarted', (response) => {
+Client.on('vpsStarted', (response) => {
   console.log(`Virtual Server Started! Details:`, response);
 });
 
 // Event listener for when a virtual server is stopped
-eventOn('vpsStopped', (response) => {
+Client.on('vpsStopped', (response) => {
   console.log(`Virtual Server Stopped! Details:`, response);
 });
 
 // Event listener for when a virtual server is restarted
-eventOn('vpsRestarted', (response) => {
+Client.on('vpsRestarted', (response) => {
   console.log(`Virtual Server Restarted! Details:`, response);
 });
 ```
