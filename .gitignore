@@ -2,3 +2,4 @@ package-lock.json
 todo.md
 index.js
 .gitignore
+node_modules
