@@ -4,8 +4,10 @@ Since there is no SDK's for Node.js for the Virtualizor API, I decided to create
 
 VirtualizorJS simplifies the management of Virtualizor servers with a streamlined and developer-friendly API for Node.js. Perform actions such as creating, starting, stopping, and restarting virtual servers effortlessly. Ideal for seamless integration into your Node.js applications, providing a powerful toolkit for Virtualizor server management.
 
-[![npm version](https://d25lcipzij17d.cloudfront.net/badge.svg?id=js&r=r&ts=1683906897&type=6e&v=1.0.2&x2=0)](https://badge.fury.io/js/virtualizorjs)
 
+[![GitHub stars](https://img.shields.io/github/stars/kkMihai/virtualizorjs.svg?style=social&label=Star&maxAge=2592000)](https://github.com/kkMihai/virtualizorjs)
+
+[![Npm package version](https://badgen.net/npm/v/virtualizorjs)](https://npmjs.com/package/express) [![Maintenance](https://img.shields.io/badge/Maintained%3F-Yes-green.svg)](https://GitHub.com/Naereen/virtualizorjs/graphs/commit-activity)
 ## Important
  - This library is still in development and there is more to add but for now it's stable and ready to use, all the methods have been tested and work as expected.
 
