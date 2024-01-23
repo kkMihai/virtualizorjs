@@ -124,73 +124,43 @@ class VirtualizorClient extends EventEmitter {
     });
   }
 
-  /**
-   * @description - This method is used to create a new virtual server
-   * @param {Object} params - Parameters for creating a new virtual server
-   * @param {Object | String} params.storageSpace - Format { Size: Number, st_uuid: String }
-   * @returns {Promise} Promise
-   * @memberof VirtualizorClient
-   */
-  async CreateVPS({
-    virtualizationType,
-    nodeSelection,
-    userEmail,
-    userpassword,
-    serverHostname,
-    rootpassword,
-    osId,
-    ipAddress,
-    storageSpace,
-    serverRam,
-    bandwidthLimit,
-    cpuCores,
-  }) {
-    /**
-     * @description - This method is used to handle storage space parameter, This in GB
-     * @param {Array|Number} space
-     * @returns {Number | Promise} Promise
-     * @memberof VirtualizorClient
-     * @private
-     */
+  // /**
+  //  * @description - This method is used to create a new virtual server
+  //  * @param {Object} params - Parameters for creating a new virtual server
+  //  * @param {String} params.planId - ID of the plan
+  //  * @param {String} params.userEmail - Email of the user
+  //  * @param {String} params.userpassword - Password of the user
+  //  * @param {String} params.serverHostname - Hostname of the server
+  //  * @param {String} params.rootpassword - Root password of the server
+  //  * @returns {Promise} Promise
+  //  * @memberof VirtualizorClient
+  //  */
+  // async CreateVPS({
+  //   planId,
+  //   userEmail,
+  //   userpassword,
+  //   serverHostname,
+  //   rootpassword,
+  // }) {
+  //   const queryParams = {
+  //     act: Actions.AddVPS,
+  //     adminapikey: this.adminapikey,
+  //     adminapipass: this.adminapipass,
+  //   };
 
-    function handleDiskSpace(space) {
-      if (Array.isArray(space)) {
-        return space.reduce((acc, curr) => acc + curr, 0);
-      }
-      return space;
-    }
+  //   const path = `/index.php${this.buildQueryString(queryParams)}`;
 
-    const queryParams = {
-      action: Actions.AddVPS,
-      virt: virtualizationType,
-      node_select: nodeSelection,
-      user_email: userEmail,
-      user_pass: userpassword,
-      hostname: serverHostname,
-      root_pass: rootpassword,
-      os_id: osId,
-      ips: ipAddress,
-      space: handleDiskSpace(storageSpace),
-      ram: serverRam,
-      bandwidth: bandwidthLimit,
-      cores: cpuCores,
-      adminapikey: this.adminapikey,
-      adminapipass: this.adminapipass,
-    };
-
-    const path = `/index.php${this.buildQueryString(queryParams)}`;
-
-    try {
-      const response = await this.makeHttpRequest(path, "POST");
-      this.emit("vpsCreated", response);
-      return Promise.resolve({
-        message: response.done && response.done.msg,
-        data: response,
-      });
-    } catch (error) {
-      return Promise.reject(error);
-    }
-  }
+  //   try {
+  //     const response = await this.makeHttpRequest(path, "POST");
+  //     this.emit("vpsCreated", response);
+  //     return Promise.resolve({
+  //       message: response.done && response.done.msg,
+  //       data: response,
+  //     });
+  //   } catch (error) {
+  //     return Promise.reject(error);
+  //   }
+  // }
 
   /**
    * @description - This method is used to get information about a virtual server
