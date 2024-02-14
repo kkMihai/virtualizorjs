@@ -7,7 +7,7 @@ VirtualizorJS simplifies the management of Virtualizor servers with a streamline
 
 [![GitHub stars](https://img.shields.io/github/stars/kkMihai/virtualizorjs.svg?style=social&label=Star&maxAge=2592000)](https://github.com/kkMihai/virtualizorjs)
 
-[![Npm package version](https://badgen.net/npm/v/virtualizorjs)](https://npmjs.com/package/virtualizorjs) [![Maintenance](https://img.shields.io/badge/Maintained%3F-Yes-green.svg)](https://github.com/kkMihai/virtualizorjs/graphs/commit-activity)
+[![Npm package version](https://badgen.net/npm/v/virtualizorjs)](https://npmjs.com/package/virtualizorjs) [![Maintenance](https://img.shields.io/badge/Maintained%3F-No-red.svg)](https://github.com/kkMihai/virtualizorjs/graphs/commit-activity)
 
 ## Important
  - This library is still in development and there is more to add but for now it's stable and ready to use, all the methods have been tested and work as expected.
