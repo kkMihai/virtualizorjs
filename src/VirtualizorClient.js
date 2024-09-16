@@ -11,7 +11,7 @@ const EventEmitter = require("events");
  * @enum {string}
  */
 
-const Actions = require("./actions");
+const Actions = require("./Actions");
 
 /**
  * @class VirtualizorClient
