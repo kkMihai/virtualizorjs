@@ -16,8 +16,6 @@ export class PlansResource {
   async create(params: CreatePlanParams): Promise<AsyncTaskResult> {
     return this.http.request<AsyncTaskResult>('addplan', {}, params as unknown as Params);
   }
-    return this.http.request<AsyncTaskResult>('addplan', {}, params as Params);
-  }
 
   async delete(planId: string): Promise<AsyncTaskResult> {
     return this.http.request<AsyncTaskResult>('deleteplan', {}, { plid: planId });

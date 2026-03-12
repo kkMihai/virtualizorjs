@@ -1,7 +1,8 @@
 import type { HttpClient } from '../http.js';
 import type { Task } from '../types/tasks.js';
+import type { VirtualizorResponse } from '../types/common.js';
 
-interface TasksResponse {
+interface TasksResponse extends VirtualizorResponse {
   tasks: Record<string, Task>;
 }
 
