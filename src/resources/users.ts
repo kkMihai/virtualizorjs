@@ -1,10 +1,12 @@
 import type { HttpClient } from '../http.js';
-import type { User, CreateUserParams } from '../types/users.js';
 import type { AsyncTaskResult, VirtualizorResponse } from '../types/common.js';
+import type { CreateUserParams, User } from '../types/users.js';
 
 type Params = Record<string, string | number | undefined>;
 
-interface ListUsersResponse extends VirtualizorResponse { users: Record<string, User>; }
+interface ListUsersResponse extends VirtualizorResponse {
+  users: Record<string, User>;
+}
 
 export class UsersResource {
   constructor(private readonly http: HttpClient) {}

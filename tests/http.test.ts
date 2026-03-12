@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'bun:test';
+import { describe, expect, it } from 'bun:test';
 import { HttpClient, VirtualizorApiError } from '../src/http.js';
 import type { ResolvedConfig } from '../src/types/config.js';
 
@@ -19,16 +19,16 @@ describe('HttpClient', () => {
 
   it('parseResponse throws VirtualizorApiError when error field present', () => {
     const client = new HttpClient(config);
-    expect(() =>
-      client.parseResponse({ error: [{ code: 1, msg: 'Invalid API Key' }] }),
-    ).toThrow(VirtualizorApiError);
+    expect(() => client.parseResponse({ error: [{ code: 1, msg: 'Invalid API Key' }] })).toThrow(
+      VirtualizorApiError,
+    );
   });
 
   it('parseResponse error message matches API error msg', () => {
     const client = new HttpClient(config);
-    expect(() =>
-      client.parseResponse({ error: [{ code: 1, msg: 'Invalid API Key' }] }),
-    ).toThrow('Invalid API Key');
+    expect(() => client.parseResponse({ error: [{ code: 1, msg: 'Invalid API Key' }] })).toThrow(
+      'Invalid API Key',
+    );
   });
 
   it('parseResponse returns data when no error', () => {

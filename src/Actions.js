@@ -8,72 +8,72 @@ module.exports = {
    * Action to add a new virtual private server (VPS).
    * @type {string}
    */
-  AddVPS: "addvs",
+  AddVPS: 'addvs',
 
   /**
    * Action to manage a VPS.
    * @type {string}
    */
-  VPSManage: "vpsmanage",
- 
+  VPSManage: 'vpsmanage',
+
   /**
    * Action to get a VPS Info
    * @type {string}
-  */
-  GetVPS: "vs",
+   */
+  GetVPS: 'vs',
 
   /**
    * Action to list all VPS.
    * @type {string}
    */
-  ListVPS: "listvs",
+  ListVPS: 'listvs',
 
   /**
    * Action to start a VPS.
    * @type {string}
    */
-  StartVPS: "start",
+  StartVPS: 'start',
 
   /**
    * Action to stop a VPS.
    * @type {string}
    */
-  StopVPS: "stop",
+  StopVPS: 'stop',
 
   /**
    * Action to restart a VPS.
    * @type {string}
    */
-  RestartVPS: "restart",
+  RestartVPS: 'restart',
 
   /**
    * Action to get VPS RAM information.
    * @type {string}
    */
-  GetVPSRam: "ram",
+  GetVPSRam: 'ram',
 
   /**
    * Action to get VPS CPU information.
    * @type {string}
    */
-  GetVPSCPU: "cpu",
+  GetVPSCPU: 'cpu',
 
   /**
    * Action to get VPS disk information.
    * @type {string}
    */
-  GetVPSDisk: "disk",
+  GetVPSDisk: 'disk',
 
   /**
    * Action to get Server Bandwidth information.
    * @type {string}
    */
-  GetServerBandwidth: "bandwidth",
+  GetServerBandwidth: 'bandwidth',
 
   /**
    *  Action to get VPS Bandwidth information.
    *  @type {string}
    */
 
-  GetPlans: "plans",
+  GetPlans: 'plans',
 };

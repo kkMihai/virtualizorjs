@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'bun:test';
+import { describe, expect, it } from 'bun:test';
 import { buildQueryString } from '../src/auth.js';
 
 describe('buildQueryString', () => {
@@ -16,7 +16,7 @@ describe('buildQueryString', () => {
     const result = buildQueryString({ act: 'listvs' }, 'mykey', 'mypass');
     const match = result.match(/api_sig=([a-f0-9]+)/);
     expect(match).not.toBeNull();
-    expect(match![1]).toHaveLength(64);
+    expect(match?.[1]).toHaveLength(64);
   });
 
   it('generates consistent signature for same inputs', () => {

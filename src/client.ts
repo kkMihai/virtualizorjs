@@ -1,9 +1,9 @@
-import type { VirtualizorConfig, ResolvedConfig } from './types/config.js';
 import { HttpClient } from './http.js';
-import { VpsResource } from './resources/vps.js';
-import { UsersResource } from './resources/users.js';
 import { PlansResource } from './resources/plans.js';
 import { TasksResource } from './resources/tasks.js';
+import { UsersResource } from './resources/users.js';
+import { VpsResource } from './resources/vps.js';
+import type { ResolvedConfig, VirtualizorConfig } from './types/config.js';
 
 export class VirtualizorClient {
   readonly vps: VpsResource;

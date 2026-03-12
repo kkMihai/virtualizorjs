@@ -1,10 +1,12 @@
 import type { HttpClient } from '../http.js';
-import type { Plan, CreatePlanParams } from '../types/plans.js';
 import type { AsyncTaskResult, VirtualizorResponse } from '../types/common.js';
+import type { CreatePlanParams, Plan } from '../types/plans.js';
 
 type Params = Record<string, string | number | undefined>;
 
-interface ListPlansResponse extends VirtualizorResponse { plans: Record<string, Plan>; }
+interface ListPlansResponse extends VirtualizorResponse {
+  plans: Record<string, Plan>;
+}
 export class PlansResource {
   constructor(private readonly http: HttpClient) {}
 

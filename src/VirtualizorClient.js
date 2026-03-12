@@ -1,6 +1,6 @@
-const https = require("https");
-const { URLSearchParams } = require("url");
-const EventEmitter = require("events");
+const https = require('node:https');
+const { URLSearchParams } = require('node:url');
+const EventEmitter = require('node:events');
 
 /**
  * @description - This class contains some the actions supported by Virtualizor API
@@ -11,7 +11,7 @@ const EventEmitter = require("events");
  * @enum {string}
  */
 
-const Actions = require("./Actions");
+const Actions = require('./Actions');
 
 /**
  * @class VirtualizorClient
@@ -32,7 +32,7 @@ class VirtualizorClient extends EventEmitter {
     this.port = port;
     this.adminapikey = adminapikey;
     this.adminapipass = adminapipass;
-    this.isRawResponse = isRawResponse
+    this.isRawResponse = isRawResponse;
 
     /**
      * @description - Bind Methods
@@ -59,12 +59,12 @@ class VirtualizorClient extends EventEmitter {
    * @private
    */
   buildQueryString(params) {
-    params.api = "json";
-    Object.keys(params).forEach((key) => {
+    params.api = 'json';
+    for (const key of Object.keys(params)) {
       if (params[key] === undefined) {
         delete params[key];
       }
-    });
+    }
     const queryParams = new URLSearchParams(params);
     return `?${queryParams.toString()}`;
   }
@@ -78,31 +78,30 @@ class VirtualizorClient extends EventEmitter {
    * @memberof VirtualizorClient
    * @private
    */
-  makeHttpRequest(path, method = "GET", postData) {
+  makeHttpRequest(path, method, postData) {
     const options = {
       host: this.host,
       port: this.port,
-      protocol: "https:",
+      protocol: 'https:',
       path: path,
       method: method,
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
+        'Content-Type': 'application/x-www-form-urlencoded',
       },
-      agent: new https.Agent({ rejectUnauthorized: false ,requestCert: false }),
+      agent: new https.Agent({ rejectUnauthorized: false, requestCert: false }),
     };
 
     return new Promise((resolve, reject) => {
       const req = https.request(options, (res) => {
-        let data = "";
-    
-      console.log(data);
+        let data = '';
 
+        console.log(data);
 
-        res.on("data", (chunk) => {
+        res.on('data', (chunk) => {
           data += chunk;
         });
 
-        res.on("end", () => {
+        res.on('end', () => {
           try {
             const parsedData = JSON.parse(data);
             resolve(parsedData);
@@ -112,7 +111,7 @@ class VirtualizorClient extends EventEmitter {
         });
       });
 
-      req.on("error", (error) => {
+      req.on('error', (error) => {
         reject(error);
       });
 
@@ -180,12 +179,11 @@ class VirtualizorClient extends EventEmitter {
     const path = `/index.php${this.buildQueryString(queryParams)}`;
 
     try {
-
       if (!id) {
-        return Promise.reject(new Error("vpsid is required"));
+        return Promise.reject(new Error('vpsid is required'));
       }
 
-      const res = await this.makeHttpRequest(path, "POST");
+      const res = await this.makeHttpRequest(path, 'POST');
       let resData = res;
 
       if (!this.isRawResponse) {
@@ -193,43 +191,39 @@ class VirtualizorClient extends EventEmitter {
       }
 
       return Promise.resolve(resData);
-
     } catch (err) {
       return Promise.reject(err);
     }
   }
 
   /**
- * @description - This method is used to list all virtual servers
- * @returns {Promise} Promise
- * @memberof VirtualizorClient
- * @Tested - Yes
- */
-async ListVPS() {
-  const queryParams = {
-    act: Actions.GetVPS,
-    adminapikey: this.adminapikey,
-    adminapipass: this.adminapipass,
-  };
+   * @description - This method is used to list all virtual servers
+   * @returns {Promise} Promise
+   * @memberof VirtualizorClient
+   * @Tested - Yes
+   */
+  async ListVPS() {
+    const queryParams = {
+      act: Actions.GetVPS,
+      adminapikey: this.adminapikey,
+      adminapipass: this.adminapipass,
+    };
 
-  const path = `/index.php${this.buildQueryString(queryParams)}`;
+    const path = `/index.php${this.buildQueryString(queryParams)}`;
 
-  try {
+    try {
+      const res = await this.makeHttpRequest(path, 'GET');
+      let resData = res;
 
-    const res = await this.makeHttpRequest(path, "GET");
-    let resData = res;
+      if (!this.isRawResponse) {
+        resData = res.vs;
+      }
 
-    if (!this.isRawResponse) {
-      resData = res.vs
+      return Promise.resolve(resData);
+    } catch (err) {
+      return Promise.reject(err);
     }
-
-    return Promise.resolve(resData);
-
-  } catch (err) {
-    return Promise.reject(err);
   }
-}
-
 
   /**
    * @description - This method is used to start a virtual server
@@ -249,19 +243,17 @@ async ListVPS() {
     const path = `/index.php${this.buildQueryString(queryParams)}`;
 
     try {
-
       if (!vpsId) {
-        return Promise.reject(new Error("vpsid is required"));
+        return Promise.reject(new Error('vpsid is required'));
       }
 
-      const res = await this.makeHttpRequest(path, "GET", `act=vs`);
-      this.emit("vpsStarted", res);
+      const res = await this.makeHttpRequest(path, 'GET', 'act=vs');
+      this.emit('vpsStarted', res);
 
       return Promise.resolve({
         message: res.done && res.done_msg,
-        error: res.error_msg || false
-      })
-
+        error: res.error_msg || false,
+      });
     } catch (err) {
       return Promise.reject(err);
     }
@@ -285,12 +277,12 @@ async ListVPS() {
     const path = `/index.php${this.buildQueryString(queryParams)}`;
 
     try {
-      const res = await this.makeHttpRequest(path, "GET", `act=vs`);
-      this.emit("vpsStopped", res);
+      const res = await this.makeHttpRequest(path, 'GET', 'act=vs');
+      this.emit('vpsStopped', res);
       return Promise.resolve({
         message: res.done && res.done_msg,
         error: res.error_msg || false,
-      })
+      });
     } catch (err) {
       return Promise.reject(err);
     }
@@ -313,12 +305,12 @@ async ListVPS() {
     const path = `/index.php${this.buildQueryString(queryParams)}`;
 
     try {
-      const res = await this.makeHttpRequest(path, "GET", `act=vs`);
-      this.emit("vpsRestarted", res);
+      const res = await this.makeHttpRequest(path, 'GET', 'act=vs');
+      this.emit('vpsRestarted', res);
       return Promise.resolve({
         message: res.done && res.done_msg,
-        error: res.error_msg || false
-      })
+        error: res.error_msg || false,
+      });
     } catch (err) {
       return Promise.reject(err);
     }
@@ -397,13 +389,11 @@ async ListVPS() {
 
     try {
       const res = await this.makeHttpRequest(path);
-      
+
       return Promise.resolve({
         info: res.disk,
         time_taken: res.time_taken,
       });
-
-
     } catch (err) {
       return Promise.reject(err);
     }
@@ -416,7 +406,7 @@ async ListVPS() {
    * @returns {Promise} Promise
    * @memberof VirtualizorClient
    */
-  async GetVPSBandwidth({vpsId, month}) {
+  async GetVPSBandwidth({ vpsId, month }) {
     const queryParams = {
       act: Actions.GetServerBandwidth,
       changeserid: vpsId,
@@ -427,7 +417,7 @@ async ListVPS() {
     const path = `/index.php${this.buildQueryString(queryParams)}`;
 
     try {
-      const res = await this.makeHttpRequest(path, "GET", `show=${month}`);
+      const res = await this.makeHttpRequest(path, 'GET', `show=${month}`);
       return Promise.resolve({
         bandwidth: res.bandwidth,
         time_taken: res.time_taken,

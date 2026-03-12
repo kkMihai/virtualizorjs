@@ -1,4 +1,4 @@
-import crypto from 'crypto';
+import crypto from 'node:crypto';
 
 type Params = Record<string, string | number | undefined>;
 
@@ -8,7 +8,10 @@ function generateSignature(apiKey: string, apiPass: string, params: Params): str
     .sort()
     .map((k) => `${k}${params[k]}`)
     .join('');
-  return crypto.createHash('sha256').update(apiKey + apiPass + sorted).digest('hex');
+  return crypto
+    .createHash('sha256')
+    .update(apiKey + apiPass + sorted)
+    .digest('hex');
 }
 
 export function buildQueryString(params: Params, apiKey: string, apiPass: string): string {

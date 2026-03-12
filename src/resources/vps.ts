@@ -1,19 +1,23 @@
 import type { HttpClient } from '../http.js';
-import type {
-  VPS,
-  CreateVPSParams,
-  RebuildVPSParams,
-  CloneVPSParams,
-  MigrateVPSParams,
-  VPSStatsResponse,
-  VNCInfo,
-} from '../types/vps.js';
 import type { AsyncTaskResult, VirtualizorResponse } from '../types/common.js';
+import type {
+  CloneVPSParams,
+  CreateVPSParams,
+  MigrateVPSParams,
+  RebuildVPSParams,
+  VNCInfo,
+  VPS,
+  VPSStatsResponse,
+} from '../types/vps.js';
 
 type Params = Record<string, string | number | undefined>;
 
-interface ListVPSResponse extends VirtualizorResponse { vs: Record<string, VPS>; }
-interface GetVPSResponse extends VirtualizorResponse { vs: Record<string, VPS>; }
+interface ListVPSResponse extends VirtualizorResponse {
+  vs: Record<string, VPS>;
+}
+interface GetVPSResponse extends VirtualizorResponse {
+  vs: Record<string, VPS>;
+}
 
 export class VpsResource {
   constructor(private readonly http: HttpClient) {}

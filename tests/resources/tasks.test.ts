@@ -1,6 +1,6 @@
-import { describe, it, expect, mock } from 'bun:test';
-import { TasksResource } from '../../src/resources/tasks.js';
+import { describe, expect, it, mock } from 'bun:test';
 import type { HttpClient } from '../../src/http.js';
+import { TasksResource } from '../../src/resources/tasks.js';
 
 function makeClient(returnValue: unknown): HttpClient {
   return { request: mock(() => Promise.resolve(returnValue)) } as unknown as HttpClient;

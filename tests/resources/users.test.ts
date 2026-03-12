@@ -1,6 +1,6 @@
-import { describe, it, expect, mock } from 'bun:test';
-import { UsersResource } from '../../src/resources/users.js';
+import { describe, expect, it, mock } from 'bun:test';
 import type { HttpClient } from '../../src/http.js';
+import { UsersResource } from '../../src/resources/users.js';
 
 function makeClient(returnValue: unknown): HttpClient {
   return { request: mock(() => Promise.resolve(returnValue)) } as unknown as HttpClient;
@@ -23,7 +23,11 @@ describe('UsersResource', () => {
   it('create() calls act=adduser with params as body', async () => {
     const client = makeClient({ done: 1 });
     await new UsersResource(client).create({ email: 'a@b.com', password: 'pw' });
-    expect(client.request).toHaveBeenCalledWith('adduser', {}, expect.objectContaining({ email: 'a@b.com' }));
+    expect(client.request).toHaveBeenCalledWith(
+      'adduser',
+      {},
+      expect.objectContaining({ email: 'a@b.com' }),
+    );
   });
 
   it('delete() calls act=deleteuser with uid body', async () => {

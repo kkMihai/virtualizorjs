@@ -1,8 +1,8 @@
-import https from 'https';
-import http from 'http';
-import type { ResolvedConfig } from './types/config.js';
-import type { VirtualizorResponse } from './types/common.js';
+import http from 'node:http';
+import https from 'node:https';
 import { buildQueryString } from './auth.js';
+import type { VirtualizorResponse } from './types/common.js';
+import type { ResolvedConfig } from './types/config.js';
 
 export class VirtualizorApiError extends Error {
   readonly code: number;
