@@ -1,0 +1,104 @@
+import { describe, it, expect, mock } from 'bun:test';
+import { VpsResource } from '../../src/resources/vps.js';
+import type { HttpClient } from '../../src/http.js';
+
+function makeClient(returnValue: unknown): HttpClient {
+  return { request: mock(() => Promise.resolve(returnValue)) } as unknown as HttpClient;
+}
+
+describe('VpsResource', () => {
+  describe('list()', () => {
+    it('calls act=listvs', async () => {
+      const client = makeClient({ vs: {} });
+      const vps = new VpsResource(client);
+      await vps.list();
+      expect(client.request).toHaveBeenCalledWith('listvs', {}, {});
+    });
+
+    it('returns vs map from response', async () => {
+      const vs = { '1': { vpsid: '1', hostname: 'test', status: '1', ram: '1024', hdd: '20480', bandwidth: '1000', os_name: 'ubuntu', ip: '1.2.3.4' } };
+      const client = makeClient({ vs });
+      const result = await new VpsResource(client).list();
+      expect(result).toEqual(vs);
+    });
+  });
+
+  describe('get(id)', () => {
+    it('calls act=vs with vpsid query param', async () => {
+      const client = makeClient({ vs: { '123': { vpsid: '123', hostname: 'h', status: '1', ram: '1024', hdd: '20480', bandwidth: '1000', os_name: 'ubuntu', ip: '1.2.3.4' } } });
+      await new VpsResource(client).get('123');
+      expect(client.request).toHaveBeenCalledWith('vs', { vpsid: '123' }, {});
+    });
+
+    it('returns the specific VPS object', async () => {
+      const vps = { vpsid: '123', hostname: 'web1', status: '1', ram: '1024', hdd: '20480', bandwidth: '1000', os_name: 'ubuntu', ip: '1.2.3.4' };
+      const client = makeClient({ vs: { '123': vps } });
+      const result = await new VpsResource(client).get('123');
+      expect(result).toEqual(vps);
+    });
+  });
+
+  describe('start(id)', () => {
+    it('calls act=vs with vpsid query and action=start body', async () => {
+      const client = makeClient({ done: 1, taskid: '456' });
+      await new VpsResource(client).start('123');
+      expect(client.request).toHaveBeenCalledWith('vs', { vpsid: '123' }, { action: 'start' });
+    });
+  });
+
+  describe('stop(id)', () => {
+    it('calls act=vs with action=stop body', async () => {
+      const client = makeClient({ done: 1, taskid: '456' });
+      await new VpsResource(client).stop('123');
+      expect(client.request).toHaveBeenCalledWith('vs', { vpsid: '123' }, { action: 'stop' });
+    });
+  });
+
+  describe('restart(id)', () => {
+    it('calls act=vs with action=restart body', async () => {
+      const client = makeClient({ done: 1, taskid: '456' });
+      await new VpsResource(client).restart('123');
+      expect(client.request).toHaveBeenCalledWith('vs', { vpsid: '123' }, { action: 'restart' });
+    });
+  });
+
+  describe('poweroff(id)', () => {
+    it('calls act=vs with action=poweroff body', async () => {
+      const client = makeClient({ done: 1, taskid: '456' });
+      await new VpsResource(client).poweroff('123');
+      expect(client.request).toHaveBeenCalledWith('vs', { vpsid: '123' }, { action: 'poweroff' });
+    });
+  });
+
+  describe('create(params)', () => {
+    it('calls act=addvs with params as body', async () => {
+      const client = makeClient({ done: 1, taskid: '789' });
+      await new VpsResource(client).create({ hostname: 'web1', rootpass: 'pw', osid: 3 });
+      expect(client.request).toHaveBeenCalledWith('addvs', {}, expect.objectContaining({ hostname: 'web1', osid: 3 }));
+    });
+  });
+
+  describe('delete(id)', () => {
+    it('calls act=deletevs with vpsid body', async () => {
+      const client = makeClient({ done: 1, taskid: '999' });
+      await new VpsResource(client).delete('123');
+      expect(client.request).toHaveBeenCalledWith('deletevs', {}, { vpsid: '123' });
+    });
+  });
+
+  describe('suspend(id)', () => {
+    it('calls act=suspendvs with vpsid body', async () => {
+      const client = makeClient({ done: 1, taskid: '999' });
+      await new VpsResource(client).suspend('123');
+      expect(client.request).toHaveBeenCalledWith('suspendvs', {}, { vpsid: '123' });
+    });
+  });
+
+  describe('unsuspend(id)', () => {
+    it('calls act=unsuspendvs with vpsid body', async () => {
+      const client = makeClient({ done: 1, taskid: '999' });
+      await new VpsResource(client).unsuspend('123');
+      expect(client.request).toHaveBeenCalledWith('unsuspendvs', {}, { vpsid: '123' });
+    });
+  });
+});
