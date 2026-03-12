@@ -25,7 +25,7 @@ export class VpsResource {
 
   async list(filters: ListVPSParams = {}): Promise<Record<string, VPS>> {
     const res = await this.http.request<ListVPSResponse>('listvs', {}, filters as Params);
-    return res.vs;
+    return res.vs ?? {};
   }
 
   async get(vpsId: string): Promise<VPS> {
