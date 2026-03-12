@@ -3,6 +3,7 @@ import type { AsyncTaskResult, VirtualizorResponse } from '../types/common.js';
 import type {
   CloneVPSParams,
   CreateVPSParams,
+  ListVPSParams,
   MigrateVPSParams,
   RebuildVPSParams,
   VNCInfo,
@@ -22,8 +23,8 @@ interface GetVPSResponse extends VirtualizorResponse {
 export class VpsResource {
   constructor(private readonly http: HttpClient) {}
 
-  async list(): Promise<Record<string, VPS>> {
-    const res = await this.http.request<ListVPSResponse>('listvs', {}, {});
+  async list(filters: ListVPSParams = {}): Promise<Record<string, VPS>> {
+    const res = await this.http.request<ListVPSResponse>('listvs', {}, filters as Params);
     return res.vs;
   }
 

@@ -14,6 +14,19 @@ export interface VPS {
   cpu?: string;
 }
 
+export interface ListVPSParams {
+  user?: string | number;
+  vpsid?: string | number;
+  vpsname?: string;
+  vpsip?: string;
+  vpshostname?: string;
+  vsstatus?: string;
+  vstype?: VirtType;
+  serid?: number;
+  plid?: number;
+  bpid?: number;
+}
+
 export interface CreateVPSParams {
   hostname: string;
   rootpass: string;

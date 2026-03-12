@@ -8,7 +8,7 @@ function makeClient(returnValue: unknown): HttpClient {
 
 describe('VpsResource', () => {
   describe('list()', () => {
-    it('calls act=listvs', async () => {
+    it('calls act=listvs with no body when no filters given', async () => {
       const client = makeClient({ vs: {} });
       const vps = new VpsResource(client);
       await vps.list();
@@ -31,6 +31,28 @@ describe('VpsResource', () => {
       const client = makeClient({ vs });
       const result = await new VpsResource(client).list();
       expect(result).toEqual(vs);
+    });
+
+    it('passes user email filter to request body', async () => {
+      const client = makeClient({ vs: {} });
+      await new VpsResource(client).list({ user: 'user@example.com' });
+      expect(client.request).toHaveBeenCalledWith('listvs', {}, { user: 'user@example.com' });
+    });
+
+    it('passes numeric uid filter to request body', async () => {
+      const client = makeClient({ vs: {} });
+      await new VpsResource(client).list({ user: 42 });
+      expect(client.request).toHaveBeenCalledWith('listvs', {}, { user: 42 });
+    });
+
+    it('passes multiple filters to request body', async () => {
+      const client = makeClient({ vs: {} });
+      await new VpsResource(client).list({ user: 'admin@host.com', serid: 1 });
+      expect(client.request).toHaveBeenCalledWith(
+        'listvs',
+        {},
+        expect.objectContaining({ user: 'admin@host.com', serid: 1 }),
+      );
     });
   });
 

@@ -4,6 +4,7 @@ export type { VirtualizorConfig } from './types/config.js';
 export type {
   VPS,
   CreateVPSParams,
+  ListVPSParams,
   RebuildVPSParams,
   CloneVPSParams,
   MigrateVPSParams,
