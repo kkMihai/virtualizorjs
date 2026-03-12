@@ -6,16 +6,6 @@
 
 A **TypeScript-first** SDK for the [Virtualizor](https://www.virtualizor.com/) server management API. Manage VPS instances, users, and plans with a clean, namespaced interface and zero production dependencies.
 
-## Features
-
-- ✅ **TypeScript-first**: Full type safety and IDE autocomplete
-- ✅ **Namespaced API**: Logical organization (`client.vps.*`, `client.users.*`, `client.plans.*`, `client.tasks.*`)
-- ✅ **SHA-256 Authentication**: Secure API communication
-- ✅ **Zero Production Dependencies**: Lightweight and fast
-- ✅ **Async Task Polling**: Built-in support for long-running operations
-- ✅ **Self-signed SSL Ready**: Pre-configured for Virtualizor's typical certificate setup
-- ✅ **Dual Output**: Outputs both CommonJS and ESM modules
-
 ## Installation
 
 **npm:**
