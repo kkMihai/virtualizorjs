@@ -1,6 +1,7 @@
 import http from 'node:http';
 import https from 'node:https';
 import { buildQueryString } from './auth.js';
+import type { ApiParams } from './types/common.js';
 import type { VirtualizorResponse } from './types/common.js';
 import type { ResolvedConfig } from './types/config.js';
 
@@ -13,8 +14,6 @@ export class VirtualizorApiError extends Error {
     this.code = code;
   }
 }
-
-type Params = Record<string, string | number | undefined>;
 
 export class HttpClient {
   constructor(private readonly config: ResolvedConfig) {}
@@ -31,15 +30,15 @@ export class HttpClient {
 
   async request<T extends VirtualizorResponse>(
     act: string,
-    queryParams: Params = {},
-    bodyParams: Params = {},
+    queryParams: ApiParams = {},
+    bodyParams: ApiParams = {},
   ): Promise<T> {
-    const allQueryParams: Params = { act, ...queryParams };
+    const allQueryParams: ApiParams = { act, ...queryParams };
     const qs = buildQueryString(allQueryParams, this.config.apiKey, this.config.apiPass);
 
     const path = `/index.php${qs}`;
 
-    const bodyString = Object.entries(bodyParams)
+    const bodyString = Object.entries(bodyParams as Record<string, unknown>)
       .filter(([, v]) => v !== undefined)
       .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(String(v))}`)
       .join('&');
@@ -84,9 +83,14 @@ export class HttpClient {
 
           try {
             resolve(JSON.parse(raw) as VirtualizorResponse);
-          } catch {
-            console.debug('[Virtualizor] Raw response (first 500 chars):', raw.slice(0, 500));
-            reject(new Error(`Failed to parse response: ${raw.slice(0, 200)}`));
+          } catch (err) {
+            if (this.config.debug)
+              console.debug('[Virtualizor] Raw response (first 500 chars):', raw.slice(0, 500));
+            reject(
+              new Error(
+                `Failed to parse response: ${raw.slice(0, 200)}. Parse error: ${err instanceof Error ? err.message : String(err)}`,
+              ),
+            );
           }
         });
       });

@@ -164,6 +164,7 @@ export interface ListVPSParams {
   serid?: number;
   plid?: number;
   bpid?: number;
+  [key: string]: unknown;
 }
 
 export interface CreateVPSParams {
@@ -186,6 +187,7 @@ export interface CreateVPSParams {
   recipe?: number;
   sshkey?: string;
   nopassword?: 0 | 1;
+  [key: string]: unknown;
 }
 
 export interface RebuildVPSParams {

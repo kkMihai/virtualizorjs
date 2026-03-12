@@ -1,4 +1,6 @@
+import { VPS_CONSTANTS } from '../constants/vps.js';
 import type { HttpClient } from '../http.js';
+import type { ApiParams } from '../types/common.js';
 import type { AsyncTaskResult, VirtualizorResponse } from '../types/common.js';
 import type {
   CloneVPSParams,
@@ -11,8 +13,6 @@ import type {
   VPSStatsResponse,
 } from '../types/vps.js';
 
-type Params = Record<string, string | number | undefined>;
-
 interface ListVPSResponse extends VirtualizorResponse {
   vs: Record<string, VPS>;
 }
@@ -24,7 +24,7 @@ export class VpsResource {
   constructor(private readonly http: HttpClient) {}
 
   async list(filters: ListVPSParams = {}): Promise<Record<string, VPS>> {
-    const res = await this.http.request<ListVPSResponse>('vs', {}, filters as Params);
+    const res = await this.http.request<ListVPSResponse>('vs', {}, filters);
     return res.vs ?? {};
   }
 
@@ -36,7 +36,7 @@ export class VpsResource {
   }
 
   async create(params: CreateVPSParams): Promise<AsyncTaskResult> {
-    return this.http.request<AsyncTaskResult>('addvs', {}, params as unknown as Params);
+    return this.http.request<AsyncTaskResult>('addvs', {}, params);
   }
 
   async delete(vpsId: string): Promise<AsyncTaskResult> {
@@ -68,27 +68,39 @@ export class VpsResource {
   }
 
   async rebuild(vpsId: string, params: RebuildVPSParams): Promise<AsyncTaskResult> {
-    return this.http.request<AsyncTaskResult>('rebuild', {}, {
-      vpsid: vpsId,
-      reos: 1,
-      ...params,
-    } as Params);
+    return this.http.request<AsyncTaskResult>(
+      'rebuild',
+      {},
+      {
+        vpsid: vpsId,
+        reos: VPS_CONSTANTS.REBUILD_REOS_FLAG,
+        ...params,
+      },
+    );
   }
 
   async clone(vpsId: string, params: CloneVPSParams): Promise<AsyncTaskResult> {
-    return this.http.request<AsyncTaskResult>('clone', {}, {
-      vpsid: vpsId,
-      ...params,
-    } as Params);
+    return this.http.request<AsyncTaskResult>(
+      'clone',
+      {},
+      {
+        vpsid: vpsId,
+        ...params,
+      },
+    );
   }
 
   async migrate(vpsId: string, params: MigrateVPSParams): Promise<AsyncTaskResult> {
-    return this.http.request<AsyncTaskResult>('migrate', {}, {
-      vpsid: vpsId,
-      migrate: 1,
-      migrate_but: 1,
-      ...params,
-    } as Params);
+    return this.http.request<AsyncTaskResult>(
+      'migrate',
+      {},
+      {
+        vpsid: vpsId,
+        migrate: VPS_CONSTANTS.MIGRATE_FLAG,
+        migrate_but: VPS_CONSTANTS.MIGRATE_BUT_FLAG,
+        ...params,
+      },
+    );
   }
 
   async status(vpsId: string): Promise<unknown> {

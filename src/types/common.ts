@@ -24,3 +24,6 @@ export type VirtType =
   | 'virtuozzo'
   | 'xcp'
   | 'hyperv';
+
+// Generic params type for API requests
+export type ApiParams = Record<string, unknown>;

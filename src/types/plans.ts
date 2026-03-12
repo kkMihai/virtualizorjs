@@ -15,4 +15,5 @@ export interface CreatePlanParams {
   bandwidth: number;
   cpu: number;
   virt?: string;
+  [key: string]: unknown;
 }

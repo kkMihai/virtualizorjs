@@ -1,7 +1,7 @@
-type Params = Record<string, string | number | undefined>;
+import type { ApiParams } from './types/common.js';
 
-export function buildQueryString(params: Params, apiKey: string, apiPass: string): string {
-  const clean: Params = {};
+export function buildQueryString(params: ApiParams, apiKey: string, apiPass: string): string {
+  const clean: ApiParams = {};
   for (const [key, value] of Object.entries(params)) {
     if (value !== undefined) {
       clean[key] = value;

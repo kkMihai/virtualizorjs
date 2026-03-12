@@ -13,6 +13,7 @@ export interface CreateUserParams {
   fname?: string;
   lname?: string;
   acttype?: number;
+  [key: string]: unknown;
 }
 
 export interface EditUserParams {

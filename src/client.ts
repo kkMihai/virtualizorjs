@@ -1,3 +1,4 @@
+import { DEFAULT_CONFIG } from './config/defaults.js';
 import { HttpClient } from './http.js';
 import { PlansResource } from './resources/plans.js';
 import { TasksResource } from './resources/tasks.js';
@@ -16,10 +17,11 @@ export class VirtualizorClient {
       host: config.host,
       apiKey: config.apiKey,
       apiPass: config.apiPass ?? '',
-      port: config.port ?? 4085,
-      https: config.https ?? true,
-      rejectUnauthorized: config.rejectUnauthorized ?? false,
-      timeout: config.timeout ?? 30000,
+      port: config.port ?? DEFAULT_CONFIG.port,
+      https: config.https ?? DEFAULT_CONFIG.https,
+      rejectUnauthorized: config.rejectUnauthorized ?? DEFAULT_CONFIG.rejectUnauthorized,
+      timeout: config.timeout ?? DEFAULT_CONFIG.timeout,
+      debug: config.debug ?? DEFAULT_CONFIG.debug,
     };
     const http = new HttpClient(resolved);
     this.vps = new VpsResource(http);

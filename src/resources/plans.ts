@@ -1,8 +1,7 @@
 import type { HttpClient } from '../http.js';
+import type { ApiParams } from '../types/common.js';
 import type { AsyncTaskResult, VirtualizorResponse } from '../types/common.js';
 import type { CreatePlanParams, Plan } from '../types/plans.js';
-
-type Params = Record<string, string | number | undefined>;
 
 interface ListPlansResponse extends VirtualizorResponse {
   plans: Record<string, Plan>;
@@ -16,7 +15,7 @@ export class PlansResource {
   }
 
   async create(params: CreatePlanParams): Promise<AsyncTaskResult> {
-    return this.http.request<AsyncTaskResult>('addplan', {}, params as unknown as Params);
+    return this.http.request<AsyncTaskResult>('addplan', {}, params);
   }
 
   async delete(planId: string): Promise<AsyncTaskResult> {

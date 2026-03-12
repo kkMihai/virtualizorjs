@@ -6,6 +6,7 @@ export interface VirtualizorConfig {
   https?: boolean;
   rejectUnauthorized?: boolean;
   timeout?: number;
+  debug?: boolean;
 }
 
 export interface ResolvedConfig {
@@ -16,4 +17,5 @@ export interface ResolvedConfig {
   https: boolean;
   rejectUnauthorized: boolean;
   timeout: number;
+  debug: boolean;
 }
