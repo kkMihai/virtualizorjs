@@ -41,6 +41,7 @@ const client = createVirtualizorClient({
   apiPass: 'your-api-pass',
   // Optional: port (default 4085), https (default true), 
   // rejectUnauthorized (default false), timeout (default 30000ms)
+  // 4085 for Https, 4084 for Http
 });
 ```
 
