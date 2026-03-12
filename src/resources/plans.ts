@@ -20,6 +20,6 @@ export class PlansResource {
   }
 
   async delete(planId: string): Promise<AsyncTaskResult> {
-    return this.http.request<AsyncTaskResult>('deleteplan', {}, { plid: planId });
+    return this.http.request<AsyncTaskResult>('plans', {}, { delete: planId });
   }
 }

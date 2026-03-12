@@ -94,34 +94,34 @@ describe('VpsResource', () => {
   });
 
   describe('start(id)', () => {
-    it('calls act=vs with vpsid query and action=start body', async () => {
+    it('calls act=vs with vpsid+action=start as query params', async () => {
       const client = makeClient({ done: 1, taskid: '456' });
       await new VpsResource(client).start('123');
-      expect(client.request).toHaveBeenCalledWith('vs', { vpsid: '123' }, { action: 'start' });
+      expect(client.request).toHaveBeenCalledWith('vs', { vpsid: '123', action: 'start' }, {});
     });
   });
 
   describe('stop(id)', () => {
-    it('calls act=vs with action=stop body', async () => {
+    it('calls act=vs with action=stop as query params', async () => {
       const client = makeClient({ done: 1, taskid: '456' });
       await new VpsResource(client).stop('123');
-      expect(client.request).toHaveBeenCalledWith('vs', { vpsid: '123' }, { action: 'stop' });
+      expect(client.request).toHaveBeenCalledWith('vs', { vpsid: '123', action: 'stop' }, {});
     });
   });
 
   describe('restart(id)', () => {
-    it('calls act=vs with action=restart body', async () => {
+    it('calls act=vs with action=restart as query params', async () => {
       const client = makeClient({ done: 1, taskid: '456' });
       await new VpsResource(client).restart('123');
-      expect(client.request).toHaveBeenCalledWith('vs', { vpsid: '123' }, { action: 'restart' });
+      expect(client.request).toHaveBeenCalledWith('vs', { vpsid: '123', action: 'restart' }, {});
     });
   });
 
   describe('poweroff(id)', () => {
-    it('calls act=vs with action=poweroff body', async () => {
+    it('calls act=vs with action=poweroff as query params', async () => {
       const client = makeClient({ done: 1, taskid: '456' });
       await new VpsResource(client).poweroff('123');
-      expect(client.request).toHaveBeenCalledWith('vs', { vpsid: '123' }, { action: 'poweroff' });
+      expect(client.request).toHaveBeenCalledWith('vs', { vpsid: '123', action: 'poweroff' }, {});
     });
   });
 
@@ -138,26 +138,26 @@ describe('VpsResource', () => {
   });
 
   describe('delete(id)', () => {
-    it('calls act=deletevs with vpsid body', async () => {
+    it('calls act=vs with delete query param', async () => {
       const client = makeClient({ done: 1, taskid: '999' });
       await new VpsResource(client).delete('123');
-      expect(client.request).toHaveBeenCalledWith('deletevs', {}, { vpsid: '123' });
+      expect(client.request).toHaveBeenCalledWith('vs', { delete: '123' }, {});
     });
   });
 
   describe('suspend(id)', () => {
-    it('calls act=suspendvs with vpsid body', async () => {
+    it('calls act=vs with suspend query param', async () => {
       const client = makeClient({ done: 1, taskid: '999' });
       await new VpsResource(client).suspend('123');
-      expect(client.request).toHaveBeenCalledWith('suspendvs', {}, { vpsid: '123' });
+      expect(client.request).toHaveBeenCalledWith('vs', { suspend: '123' }, {});
     });
   });
 
   describe('unsuspend(id)', () => {
-    it('calls act=unsuspendvs with vpsid body', async () => {
+    it('calls act=vs with unsuspend query param', async () => {
       const client = makeClient({ done: 1, taskid: '999' });
       await new VpsResource(client).unsuspend('123');
-      expect(client.request).toHaveBeenCalledWith('unsuspendvs', {}, { vpsid: '123' });
+      expect(client.request).toHaveBeenCalledWith('vs', { unsuspend: '123' }, {});
     });
   });
 });

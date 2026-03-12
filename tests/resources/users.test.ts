@@ -30,21 +30,21 @@ describe('UsersResource', () => {
     );
   });
 
-  it('delete() calls act=deleteuser with uid body', async () => {
+  it('delete() calls act=users with delete body', async () => {
     const client = makeClient({ done: 1 });
     await new UsersResource(client).delete('42');
-    expect(client.request).toHaveBeenCalledWith('deleteuser', {}, { uid: '42' });
+    expect(client.request).toHaveBeenCalledWith('users', {}, { delete: '42' });
   });
 
-  it('suspend() calls act=usersuspend with uid body', async () => {
+  it('suspend() calls act=users with suspend body', async () => {
     const client = makeClient({ done: 1 });
     await new UsersResource(client).suspend('42');
-    expect(client.request).toHaveBeenCalledWith('usersuspend', {}, { uid: '42' });
+    expect(client.request).toHaveBeenCalledWith('users', {}, { suspend: '42' });
   });
 
-  it('unsuspend() calls act=userunsuspend with uid body', async () => {
+  it('unsuspend() calls act=users with unsuspend body', async () => {
     const client = makeClient({ done: 1 });
     await new UsersResource(client).unsuspend('42');
-    expect(client.request).toHaveBeenCalledWith('userunsuspend', {}, { uid: '42' });
+    expect(client.request).toHaveBeenCalledWith('users', {}, { unsuspend: '42' });
   });
 });

@@ -45,9 +45,9 @@ describe('PlansResource', () => {
     );
   });
 
-  it('delete() calls act=deleteplan with plid body', async () => {
+  it('delete() calls act=plans with delete body', async () => {
     const client = makeClient({ done: 1 });
     await new PlansResource(client).delete('5');
-    expect(client.request).toHaveBeenCalledWith('deleteplan', {}, { plid: '5' });
+    expect(client.request).toHaveBeenCalledWith('plans', {}, { delete: '5' });
   });
 });

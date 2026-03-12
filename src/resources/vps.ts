@@ -40,31 +40,31 @@ export class VpsResource {
   }
 
   async delete(vpsId: string): Promise<AsyncTaskResult> {
-    return this.http.request<AsyncTaskResult>('deletevs', {}, { vpsid: vpsId });
+    return this.http.request<AsyncTaskResult>('vs', { delete: vpsId }, {});
   }
 
   async start(vpsId: string): Promise<AsyncTaskResult> {
-    return this.http.request<AsyncTaskResult>('vs', { vpsid: vpsId }, { action: 'start' });
+    return this.http.request<AsyncTaskResult>('vs', { vpsid: vpsId, action: 'start' }, {});
   }
 
   async stop(vpsId: string): Promise<AsyncTaskResult> {
-    return this.http.request<AsyncTaskResult>('vs', { vpsid: vpsId }, { action: 'stop' });
+    return this.http.request<AsyncTaskResult>('vs', { vpsid: vpsId, action: 'stop' }, {});
   }
 
   async restart(vpsId: string): Promise<AsyncTaskResult> {
-    return this.http.request<AsyncTaskResult>('vs', { vpsid: vpsId }, { action: 'restart' });
+    return this.http.request<AsyncTaskResult>('vs', { vpsid: vpsId, action: 'restart' }, {});
   }
 
   async poweroff(vpsId: string): Promise<AsyncTaskResult> {
-    return this.http.request<AsyncTaskResult>('vs', { vpsid: vpsId }, { action: 'poweroff' });
+    return this.http.request<AsyncTaskResult>('vs', { vpsid: vpsId, action: 'poweroff' }, {});
   }
 
   async suspend(vpsId: string): Promise<AsyncTaskResult> {
-    return this.http.request<AsyncTaskResult>('suspendvs', {}, { vpsid: vpsId });
+    return this.http.request<AsyncTaskResult>('vs', { suspend: vpsId }, {});
   }
 
   async unsuspend(vpsId: string): Promise<AsyncTaskResult> {
-    return this.http.request<AsyncTaskResult>('unsuspendvs', {}, { vpsid: vpsId });
+    return this.http.request<AsyncTaskResult>('vs', { unsuspend: vpsId }, {});
   }
 
   async rebuild(vpsId: string, params: RebuildVPSParams): Promise<AsyncTaskResult> {
@@ -88,6 +88,6 @@ export class VpsResource {
   }
 
   async stats(vpsId: string): Promise<VPSStatsResponse> {
-    return this.http.request<VPSStatsResponse>('vpsstatistics', { vpsid: vpsId }, {});
+    return this.http.request<VPSStatsResponse>('vps_stats', {}, { vpsid: vpsId });
   }
 }

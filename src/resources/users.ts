@@ -21,14 +21,14 @@ export class UsersResource {
   }
 
   async delete(uid: string): Promise<AsyncTaskResult> {
-    return this.http.request<AsyncTaskResult>('deleteuser', {}, { uid });
+    return this.http.request<AsyncTaskResult>('users', {}, { delete: uid });
   }
 
   async suspend(uid: string): Promise<AsyncTaskResult> {
-    return this.http.request<AsyncTaskResult>('usersuspend', {}, { uid });
+    return this.http.request<AsyncTaskResult>('users', {}, { suspend: uid });
   }
 
   async unsuspend(uid: string): Promise<AsyncTaskResult> {
-    return this.http.request<AsyncTaskResult>('userunsuspend', {}, { uid });
+    return this.http.request<AsyncTaskResult>('users', {}, { unsuspend: uid });
   }
 }
