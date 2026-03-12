@@ -8,11 +8,12 @@ const client = createVirtualizorClient({
 
 async function main() {
   try {
-    const vpsList = await client.vps.list({ user: '123' });
+    const vpsList = await client.vps.list();
 
     console.log('VPS Instances:');
     for (const [vpsid, vps] of Object.entries(vpsList)) {
       console.log(`  ${vpsid}: ${vps.hostname}`);
+      console.log(`    OS: ${vps.os_name}`);
     }
   } catch (error) {
     if (error instanceof VirtualizorApiError) {
