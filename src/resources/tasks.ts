@@ -1,3 +1,4 @@
+import { DEFAULT_TASK_POLLING } from '../config/defaults.js';
 import type { HttpClient } from '../http.js';
 import type { VirtualizorResponse } from '../types/common.js';
 import type { Task } from '../types/tasks.js';
@@ -18,7 +19,10 @@ export class TasksResource {
     taskId: string,
     options: { pollIntervalMs?: number; timeoutMs?: number } = {},
   ): Promise<Task> {
-    const { pollIntervalMs = 2000, timeoutMs = 120000 } = options;
+    const {
+      pollIntervalMs = DEFAULT_TASK_POLLING.pollIntervalMs,
+      timeoutMs = DEFAULT_TASK_POLLING.timeoutMs,
+    } = options;
     const deadline = Date.now() + timeoutMs;
 
     while (Date.now() < deadline) {
