@@ -1,6 +1,7 @@
 node_modules/
 dist/
 coverage/
+docs/
 nul
 *.lock
 package-lock.json
