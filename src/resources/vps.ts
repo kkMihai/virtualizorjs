@@ -14,23 +14,23 @@ import type {
 type Params = Record<string, string | number | undefined>;
 
 interface ListVPSResponse extends VirtualizorResponse {
-  servers: Record<string, VPS>;
+  vs: Record<string, VPS>;
 }
 interface GetVPSResponse extends VirtualizorResponse {
-  servers: Record<string, VPS>;
+  vs: Record<string, VPS>;
 }
 
 export class VpsResource {
   constructor(private readonly http: HttpClient) {}
 
   async list(filters: ListVPSParams = {}): Promise<Record<string, VPS>> {
-    const res = await this.http.request<ListVPSResponse>('listvs', {}, filters as Params);
-    return res.servers ?? {};
+    const res = await this.http.request<ListVPSResponse>('vs', {}, filters as Params);
+    return res.vs ?? {};
   }
 
   async get(vpsId: string): Promise<VPS> {
     const res = await this.http.request<GetVPSResponse>('vs', { vpsid: vpsId }, {});
-    const vps = res.servers[vpsId];
+    const vps = res.vs[vpsId];
     if (!vps) throw new Error(`VPS ${vpsId} not found in response`);
     return vps;
   }
