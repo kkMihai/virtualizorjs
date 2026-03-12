@@ -1,6 +1,9 @@
-package-lock.json
-todo.md
-index.js
-.gitignore
-node_modules
+node_modules/
+dist/
+coverage/
 nul
+*.lock
+package-lock.json
+
+.idea/
+*.iml
