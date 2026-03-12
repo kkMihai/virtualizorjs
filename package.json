@@ -1,49 +1,52 @@
 {
   "name": "virtualizorjs",
-  "version": "1.0.5",
-  "description": "VirtualizorJS simplifies the management of Virtualizor servers with a streamlined and developer-friendly API for Node.js. Perform actions such as creating, starting, stopping, and restarting virtual servers effortlessly. Ideal for seamless integration into your Node.js applications, providing a powerful toolkit for Virtualizor server management.",
-  "main": "./src/VirtualizorClient.js",
-  "scripts": {},
+  "version": "2.0.0",
+  "description": "TypeScript SDK for the Virtualizor server management API. Create, start, stop, restart, rebuild, and manage VPS instances with a type-safe, developer-friendly client.",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "coverage": "vitest run --coverage",
+    "typecheck": "tsc --noEmit",
+    "lint": "biome check src tests",
+    "lint:fix": "biome check --write src tests",
+    "format": "biome format --write src tests",
+    "release": "npm run build && bumpp && npm publish --access public",
+    "prepublishOnly": "npm run build && npm run typecheck",
+    "check-exports": "attw --pack .",
+    "prepare": "husky"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "keywords": [
     "virtualizor",
-    "api",
-    "nodejs",
-    "js",
+    "vps",
     "sdk",
-    "wrapper",
-    "virtualizorjs",
-    "virtualizor-js",
-    "virtualizorjs-api",
-    "virtualizorjs-wrapper",
-    "virtualizorjs-sdk",
-    "lightweight",
-    "easy",
-    "simple",
-    "powerful",
-    "fast",
-    "quick",
-    "react",
-    "vue",
-    "angular",
-    "express",
-    "node",
-    "nextjs",
-    "nuxtjs",
-    "svelte",
-    "electron",
-    "server",
-    "client",
-    "library",
-    "package",
-    "module",
-    "npm"
+    "api",
+    "typescript",
+    "nodejs"
   ],
-  "publishConfig": {
-    "@kkMihai:registry": "https://npm.pkg.github.com"
-  },
   "author": "kkMihai",
   "license": "MIT",
-  "github": "https://github.com/kkMihai/virtualizorjs",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kkMihai/virtualizorjs.git"
@@ -51,9 +54,21 @@
   "bugs": {
     "url": "https://github.com/kkMihai/virtualizorjs/issues"
   },
-  "wiki": "https://github.com/kkMihai/virtualizorjs/wiki",
   "homepage": "https://github.com/kkMihai/virtualizorjs#readme",
   "engines": {
-    "node": ">=12.0.0"
+    "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@arethetypeswrong/cli": "^0.17.0",
+    "@biomejs/biome": "^1.9.0",
+    "@commitlint/cli": "^19.0.0",
+    "@commitlint/config-conventional": "^19.0.0",
+    "@types/node": "^22.0.0",
+    "@vitest/coverage-v8": "^3.0.0",
+    "bumpp": "^9.0.0",
+    "husky": "^9.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.5.0",
+    "vitest": "^3.0.0"
   }
 }
