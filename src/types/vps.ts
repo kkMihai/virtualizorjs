@@ -1,4 +1,4 @@
-import type { VirtType } from './common.js';
+import type { VirtType, VirtualizorResponse } from './common.js';
 
 export interface VPS {
   vpsid: string;
@@ -51,7 +51,7 @@ export interface MigrateVPSParams {
   online?: 0 | 1;
 }
 
-export interface VPSStatsResponse {
+export interface VPSStatsResponse extends VirtualizorResponse {
   cpu?: unknown;
   ram?: unknown;
   disk?: unknown;
@@ -59,7 +59,7 @@ export interface VPSStatsResponse {
   time_taken?: string;
 }
 
-export interface VNCInfo {
+export interface VNCInfo extends VirtualizorResponse {
   novnc?: string;
   [key: string]: unknown;
 }

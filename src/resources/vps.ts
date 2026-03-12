@@ -8,12 +8,12 @@ import type {
   VPSStatsResponse,
   VNCInfo,
 } from '../types/vps.js';
-import type { AsyncTaskResult } from '../types/common.js';
+import type { AsyncTaskResult, VirtualizorResponse } from '../types/common.js';
 
 type Params = Record<string, string | number | undefined>;
 
-interface ListVPSResponse { vs: Record<string, VPS>; }
-interface GetVPSResponse { vs: Record<string, VPS>; }
+interface ListVPSResponse extends VirtualizorResponse { vs: Record<string, VPS>; }
+interface GetVPSResponse extends VirtualizorResponse { vs: Record<string, VPS>; }
 
 export class VpsResource {
   constructor(private readonly http: HttpClient) {}
@@ -31,7 +31,7 @@ export class VpsResource {
   }
 
   async create(params: CreateVPSParams): Promise<AsyncTaskResult> {
-    return this.http.request<AsyncTaskResult>('addvs', {}, params as Params);
+    return this.http.request<AsyncTaskResult>('addvs', {}, params as unknown as Params);
   }
 
   async delete(vpsId: string): Promise<AsyncTaskResult> {
