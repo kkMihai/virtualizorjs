@@ -1,18 +1,4 @@
-import crypto from 'node:crypto';
-
 type Params = Record<string, string | number | undefined>;
-
-function generateSignature(apiKey: string, apiPass: string, params: Params): string {
-  const sorted = Object.keys(params)
-    .filter((k) => params[k] !== undefined)
-    .sort()
-    .map((k) => `${k}${params[k]}`)
-    .join('');
-  return crypto
-    .createHash('sha256')
-    .update(apiKey + apiPass + sorted)
-    .digest('hex');
-}
 
 export function buildQueryString(params: Params, apiKey: string, apiPass: string): string {
   const clean: Params = {};
@@ -22,12 +8,10 @@ export function buildQueryString(params: Params, apiKey: string, apiPass: string
     }
   }
 
-  const sig = generateSignature(apiKey, apiPass, clean);
-
   const urlParams = new URLSearchParams();
   urlParams.set('api', 'json');
-  urlParams.set('api_key', apiKey);
-  urlParams.set('api_sig', sig);
+  urlParams.set('adminapikey', apiKey);
+  urlParams.set('adminapipass', apiPass);
 
   for (const [key, value] of Object.entries(clean)) {
     urlParams.set(key, String(value));

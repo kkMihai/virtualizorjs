@@ -71,9 +71,24 @@ export class HttpClient {
           raw += chunk.toString();
         });
         res.on('end', () => {
+          // Debug logging
+          console.debug('[Virtualizor] Response status:', res.statusCode);
+
+          // Handle redirect (302) - usually means auth failed
+          if (res.statusCode === 302 || res.statusCode === 301) {
+            reject(
+              new Error(
+                `Redirect detected (status ${res.statusCode}). Authentication failed. ` +
+                  `Check your API credentials. Location: ${res.headers.location}`,
+              ),
+            );
+            return;
+          }
+
           try {
             resolve(JSON.parse(raw) as VirtualizorResponse);
           } catch {
+            console.debug('[Virtualizor] Raw response (first 500 chars):', raw.slice(0, 500));
             reject(new Error(`Failed to parse response: ${raw.slice(0, 200)}`));
           }
         });
