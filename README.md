@@ -1,126 +1,211 @@
 # VirtualizorJS
 
-Since there is no SDK's for Node.js for the Virtualizor API, I decided to create one, and one that is actually easy to use and useful with **0 Dependencies** keeping it `Lightweight` and `Fast`.
+[![npm version](https://img.shields.io/npm/v/virtualizorjs)](https://www.npmjs.com/package/virtualizorjs)
+[![CI Status](https://img.shields.io/github/actions/workflow/status/kkMihai/virtualizorjs/ci.yml?branch=main)](https://github.com/kkMihai/virtualizorjs/actions)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-VirtualizorJS simplifies the management of Virtualizor servers with a streamlined and developer-friendly API for Node.js. Perform actions such as creating, starting, stopping, and restarting virtual servers effortlessly. Ideal for seamless integration into your Node.js applications, providing a powerful toolkit for Virtualizor server management.
+A **TypeScript-first** SDK for the [Virtualizor](https://www.virtualizor.com/) server management API. Manage VPS instances, users, and plans with a clean, namespaced interface and zero production dependencies.
 
+## Features
 
-[![GitHub stars](https://img.shields.io/github/stars/kkMihai/virtualizorjs.svg?style=social&label=Star&maxAge=2592000)](https://github.com/kkMihai/virtualizorjs)
-
-[![Npm package version](https://badgen.net/npm/v/virtualizorjs)](https://npmjs.com/package/virtualizorjs) [![Maintenance](https://img.shields.io/badge/Maintained%3F-No-red.svg)](https://github.com/kkMihai/virtualizorjs/graphs/commit-activity)
-
-## Important
- - This library is still in development and there is more to add but for now it's stable and ready to use, all the methods have been tested and work as expected.
-
-## Table of Contents
-- [Installation](#installation)
-- [Usage](#usage)
-- [Examples](#examples)
-- [API Documentation](#api-documentation)
-- [Roadmap](#roadmap)
-- [Contributing](#contributing)
-- [License](#license)
+- ✅ **TypeScript-first**: Full type safety and IDE autocomplete
+- ✅ **Namespaced API**: Logical organization (`client.vps.*`, `client.users.*`, `client.plans.*`, `client.tasks.*`)
+- ✅ **SHA-256 Authentication**: Secure API communication
+- ✅ **Zero Production Dependencies**: Lightweight and fast
+- ✅ **Async Task Polling**: Built-in support for long-running operations
+- ✅ **Self-signed SSL Ready**: Pre-configured for Virtualizor's typical certificate setup
+- ✅ **Dual Output**: Outputs both CommonJS and ESM modules
 
 ## Installation
 
+**npm:**
 ```bash
-npm i virtualizorjs@latest
+npm install virtualizorjs
 ```
 
-## Usage
-
-```javascript
-
-const VirtualizorClient = require('virtualizorjs');
-
-// Initialize VirtualizorClient
-const { ListVPS } = new VirtualizorClient({
-  host: '< IP or Hostname of Virtualizor Server >',
-  port: 4085, // or 4085 for SSL
-  adminapikey: "< Your API KEY >",
-  adminapipass: "< Your API PASS >",
-});
-
-// Using const client = new VirtualizorClient({ ... }) is also valid, but you will have to use client.ListVPS() instead of ListVPS() which just looks ugly.
-// Example: Get a list of all VPSs
-ListVPS().then((data) => {
-  console.log(data);
-}).catch((err) => {
-  console.log(err);
-});
+**bun:**
+```bash
+bun add virtualizorjs
 ```
 
-# Event Handling Usage
+## Quick Start
 
-VirtualizorJS uses the [EventEmitter](https://nodejs.org/api/events.html) class to handle events. You can attach **`Event Listeners`** to different events provided by the VirtualizorClient.
+### Create a Client
 
-- Note: To use **`Event Listeners`** we need to define the **`VirtualizorClient`** as a `const` named preferably **`Client`** and then use **`Client.on()`** to attach **`Event Listeners`** to different events.
+```typescript
+import { createVirtualizorClient } from 'virtualizorjs';
 
-```javascript
-const VirtualizorClient = require('virtualizorjs'); 
-
-const Client = new VirtualizorClient({
-  host: '< IP or Hostname of Virtualizor Server >',
-  port: 4085,
-  adminapikey: "< Your API KEY >",
-  adminapipass: "< Your API PASS >",
-});
-
-//Get the methods you need
-const { StartVPS } = Client;
-
-// - Event Types - :
-// 1. vpsCreated
-// 2. vpsStarted
-// 3. vpsStopped
-// 4. vpsRestarted
-
-// Event listener for when a virtual server is created
-Client.on('vpsCreated', (response) => {
-  console.log(`Virtual Server Created! Details:`, response);
-});
-
-// Event listener for when a virtual server is started
-Client.on('vpsStarted', (response) => {
-  console.log(`Virtual Server Started! Details:`, response);
-});
-
-// Event listener for when a virtual server is stopped
-Client.on('vpsStopped', (response) => {
-  console.log(`Virtual Server Stopped! Details:`, response);
-});
-
-// Event listener for when a virtual server is restarted
-Client.on('vpsRestarted', (response) => {
-  console.log(`Virtual Server Restarted! Details:`, response);
+const client = createVirtualizorClient({
+  host: 'virtualizor.example.com',
+  apiKey: 'your-api-key',
+  apiPass: 'your-api-pass',
+  // Optional: port (default 4085), https (default true), 
+  // rejectUnauthorized (default false), timeout (default 30000ms)
 });
 ```
 
-## ❓ What's the point of using **`Event Listeners`**?
- - **`Event Listeners`** are useful when you want to perform an action when a certain event occurs without modifying the source code of the **`VirtualizorJS`** library to avoid breaking changes.
- - For example, you can use **`Event Listeners`** to send a notification to your `users` when a event is triggered.
- - You can also use **`Event Listeners`** to perform an action when a event is triggered.
+### List All VPS
 
-## Examples
+```typescript
+const vpsList = await client.vps.list();
 
-- [Get VPS's List](/examples/listvps.js)
-- [Create VPS](/examples/createvps.js)
-- [Using Event Handling](/examples/eventhandling.js)
+for (const [vpsId, vps] of Object.entries(vpsList)) {
+  console.log(`${vpsId}: ${vps.hostname} (${vps.status})`);
+}
+```
 
+### Start a VPS and Wait for Completion
 
-## Documentation
+Many Virtualizor operations are asynchronous. Use `client.tasks.wait()` to poll for completion:
 
-- Check the [Wiki](https://github.com/kkMihai/virtualizorjs/wiki) for detailed documentation.
-- If you use frameworks such as [Next.js](https://nextjs.org/) make sure to use it only Server-Side for security reasons.
+```typescript
+const result = await client.vps.start('123');
+const task = await client.tasks.wait(result.taskid!);
 
-## Roadmap
-  - [ ] Add Proxmox KVM Support
-  - [ ] Add Virtualization Types enums
+console.log(`VPS started! Task status: ${task.status}`);
+```
+
+## Error Handling
+
+All SDK errors are instances of `VirtualizorApiError`. Catch and inspect them:
+
+```typescript
+import { VirtualizorApiError } from 'virtualizorjs';
+
+try {
+  await client.vps.start('invalid-id');
+} catch (err) {
+  if (err instanceof VirtualizorApiError) {
+    console.error(`API Error [${err.code}]: ${err.message}`);
+  } else {
+    console.error('Unexpected error:', err);
+  }
+}
+```
+
+## API Reference
+
+### VPS Management
+
+| Method | Parameters | Returns | Notes |
+|--------|-----------|---------|-------|
+| `list()` | — | `Record<string, VPS>` | List all VPS |
+| `get(vpsId)` | `vpsId: string` | `VPS` | Get a single VPS |
+| `create(params)` | `CreateVPSParams` | `AsyncTaskResult` | Async |
+| `delete(vpsId)` | `vpsId: string` | `AsyncTaskResult` | Async |
+| `start(vpsId)` | `vpsId: string` | `AsyncTaskResult` | Async |
+| `stop(vpsId)` | `vpsId: string` | `AsyncTaskResult` | Async |
+| `restart(vpsId)` | `vpsId: string` | `AsyncTaskResult` | Async |
+| `poweroff(vpsId)` | `vpsId: string` | `AsyncTaskResult` | Async |
+| `suspend(vpsId)` | `vpsId: string` | `AsyncTaskResult` | Async |
+| `unsuspend(vpsId)` | `vpsId: string` | `AsyncTaskResult` | Async |
+| `rebuild(vpsId, params)` | `vpsId: string, RebuildVPSParams` | `AsyncTaskResult` | Async |
+| `clone(vpsId, params)` | `vpsId: string, CloneVPSParams` | `AsyncTaskResult` | Async |
+| `migrate(vpsId, params)` | `vpsId: string, MigrateVPSParams` | `AsyncTaskResult` | Async |
+| `status(vpsId)` | `vpsId: string` | `unknown` | Current status snapshot |
+| `vnc(vpsId)` | `vpsId: string` | `VNCInfo` | Get VNC connection details |
+| `stats(vpsId)` | `vpsId: string` | `VPSStatsResponse` | Get resource usage statistics |
+
+### User Management
+
+| Method | Parameters | Returns | Notes |
+|--------|-----------|---------|-------|
+| `list()` | — | `Record<string, User>` | List all users |
+| `create(params)` | `CreateUserParams` | `AsyncTaskResult` | Async |
+| `delete(uid)` | `uid: string` | `AsyncTaskResult` | Async |
+| `suspend(uid)` | `uid: string` | `AsyncTaskResult` | Async |
+| `unsuspend(uid)` | `uid: string` | `AsyncTaskResult` | Async |
+
+### Plan Management
+
+| Method | Parameters | Returns | Notes |
+|--------|-----------|---------|-------|
+| `list()` | — | `Record<string, Plan>` | List all plans |
+| `create(params)` | `CreatePlanParams` | `AsyncTaskResult` | Async |
+| `delete(planId)` | `planId: string` | `AsyncTaskResult` | Async |
+
+### Task Polling
+
+| Method | Parameters | Returns | Notes |
+|--------|-----------|---------|-------|
+| `get(taskId)` | `taskId: string` | `Task \| undefined` | Get task status once |
+| `wait(taskId, options?)` | `taskId: string, { pollIntervalMs?, timeoutMs? }?` | `Promise<Task>` | Poll until complete or timeout |
+
+## Task Polling Pattern
+
+Many API calls return `AsyncTaskResult` with a `taskid` field. Poll for completion:
+
+```typescript
+// Example: Create a VPS and wait for it to be ready
+const createResult = await client.vps.create({
+  hostname: 'my-vps.example.com',
+  // ... other params
+});
+
+const completedTask = await client.tasks.wait(createResult.taskid!, {
+  pollIntervalMs: 5000,  // Check every 5 seconds (default: 2000ms)
+  timeoutMs: 300000,     // Give up after 5 minutes (default: 120000ms)
+});
+
+if (completedTask.status === '1' || completedTask.status === 'done') {
+  console.log('VPS creation completed successfully');
+}
+```
+
+## Configuration
+
+When creating a client, the following options are available:
+
+```typescript
+interface VirtualizorConfig {
+  host: string;                      // Virtualizor server hostname or IP
+  apiKey: string;                    // API key from Virtualizor panel
+  apiPass: string;                   // API password from Virtualizor panel
+  port?: number;                     // Server port (default: 4085)
+  https?: boolean;                   // Use HTTPS (default: true)
+  rejectUnauthorized?: boolean;      // Reject self-signed certs (default: false)
+  timeout?: number;                  // Request timeout in ms (default: 30000)
+}
+```
+
+### Self-Signed SSL Certificates
+
+Virtualizor typically uses self-signed SSL certificates. The SDK handles this by default with `rejectUnauthorized: false`. If you need to enforce certificate validation, set `rejectUnauthorized: true` and ensure your Virtualizor instance has a valid certificate.
+
+## TypeScript Types
+
+All resources are fully typed. Import types as needed:
+
+```typescript
+import type {
+  VPS,
+  CreateVPSParams,
+  RebuildVPSParams,
+  CloneVPSParams,
+  MigrateVPSParams,
+  User,
+  CreateUserParams,
+  Plan,
+  CreatePlanParams,
+  Task,
+  AsyncTaskResult,
+} from 'virtualizorjs';
+```
 
 ## Contributing
 
-- Feel free to contribute by opening issues or submitting pull requests. See [CONTRIBUTING](/CONTRIBUTING.md) for details.
+We welcome contributions! Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines on how to help.
+
+## Security
+
+Please report security vulnerabilities to the maintainers privately. See [SECURITY.md](./SECURITY.md) for more details.
 
 ## License
 
-- This project is licensed under the MIT License - see the [LICENSE](/LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
+
+---
+
+**Author**: [kkMihai](https://github.com/kkMihai)  
+**Package**: [npm/virtualizorjs](https://www.npmjs.com/package/virtualizorjs)  
+**Repository**: [github.com/kkMihai/virtualizorjs](https://github.com/kkMihai/virtualizorjs)
