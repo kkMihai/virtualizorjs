@@ -12,7 +12,7 @@ async function main() {
     const result = await client.vps.create({
       hostname: 'example-vps',
       rootpass: 'SecurePassword123!',
-      osid: '1',
+      osid: 1,
     });
 
     console.log(`VPS creation task initiated: ${result.taskid}`);

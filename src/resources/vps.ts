@@ -68,15 +68,27 @@ export class VpsResource {
   }
 
   async rebuild(vpsId: string, params: RebuildVPSParams): Promise<AsyncTaskResult> {
-    return this.http.request<AsyncTaskResult>('rebuild', {}, { vpsid: vpsId, ...params } as Params);
+    return this.http.request<AsyncTaskResult>('rebuild', {}, {
+      vpsid: vpsId,
+      reos: 1,
+      ...params,
+    } as Params);
   }
 
   async clone(vpsId: string, params: CloneVPSParams): Promise<AsyncTaskResult> {
-    return this.http.request<AsyncTaskResult>('clone', {}, { vpsid: vpsId, ...params } as Params);
+    return this.http.request<AsyncTaskResult>('clone', {}, {
+      vpsid: vpsId,
+      ...params,
+    } as Params);
   }
 
   async migrate(vpsId: string, params: MigrateVPSParams): Promise<AsyncTaskResult> {
-    return this.http.request<AsyncTaskResult>('migrate', {}, { vpsid: vpsId, ...params } as Params);
+    return this.http.request<AsyncTaskResult>('migrate', {}, {
+      vpsid: vpsId,
+      migrate: 1,
+      migrate_but: 1,
+      ...params,
+    } as Params);
   }
 
   async status(vpsId: string): Promise<unknown> {
