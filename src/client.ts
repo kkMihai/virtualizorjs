@@ -1,0 +1,34 @@
+import type { VirtualizorConfig, ResolvedConfig } from './types/config.js';
+import { HttpClient } from './http.js';
+import { VpsResource } from './resources/vps.js';
+import { UsersResource } from './resources/users.js';
+import { PlansResource } from './resources/plans.js';
+import { TasksResource } from './resources/tasks.js';
+
+export class VirtualizorClient {
+  readonly vps: VpsResource;
+  readonly users: UsersResource;
+  readonly plans: PlansResource;
+  readonly tasks: TasksResource;
+
+  constructor(config: VirtualizorConfig) {
+    const resolved: ResolvedConfig = {
+      host: config.host,
+      apiKey: config.apiKey,
+      apiPass: config.apiPass ?? '',
+      port: config.port ?? 4085,
+      https: config.https ?? true,
+      rejectUnauthorized: config.rejectUnauthorized ?? false,
+      timeout: config.timeout ?? 30000,
+    };
+    const http = new HttpClient(resolved);
+    this.vps = new VpsResource(http);
+    this.users = new UsersResource(http);
+    this.plans = new PlansResource(http);
+    this.tasks = new TasksResource(http);
+  }
+}
+
+export function createVirtualizorClient(config: VirtualizorConfig): VirtualizorClient {
+  return new VirtualizorClient(config);
+}
