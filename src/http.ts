@@ -71,9 +71,6 @@ export class HttpClient {
           raw += chunk.toString();
         });
         res.on('end', () => {
-          // Debug logging
-          console.debug('[Virtualizor] Response status:', res.statusCode);
-
           // Handle redirect (302) - usually means auth failed
           if (res.statusCode === 302 || res.statusCode === 301) {
             reject(
