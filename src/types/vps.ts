@@ -242,5 +242,4 @@ export interface VNCInfo extends VirtualizorResponse {
   [key: string]: unknown;
 }
 
-
 // virtualizor api is so shit omfg
