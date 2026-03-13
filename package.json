@@ -27,7 +27,7 @@
     "lint": "biome check src tests",
     "lint:fix": "biome check --write src tests",
     "format": "biome format --write src tests",
-    "release": "bun run build && bumpp && bun publish --access public",
+    "release": "bun run build && bumpp",
     "prepublishOnly": "bun run build && bun run typecheck",
     "check-exports": "attw --pack .",
     "prepare": "husky"
