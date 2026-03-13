@@ -89,19 +89,6 @@ bun run lint:fix
 bun run format
 ```
 
-- Release / publishing helpers
-
-```powershell
-# build and create a release bump (uses `bumpp`)
-bun run release
-
-# check package exports
-bun run check-exports
-
-# prepublish hook (runs build + typecheck)
-bun run prepublishOnly
-```
-
 Other notes about scripts:
 - `build` uses `tsup` to produce dist files (ESM + CJS types).  
 - `typecheck` runs `tsc --noEmit` to validate TypeScript types.  
