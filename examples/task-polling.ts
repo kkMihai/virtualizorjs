@@ -7,8 +7,7 @@ const client = createVirtualizorClient({
 });
 
 async function main() {
-  try {
-    console.log('Starting VPS...');
+    try  {
     const result = await client.vps.start('1');
 
     const taskId = result.taskid;
@@ -26,15 +25,11 @@ async function main() {
     });
 
     console.log('VPS start task completed:', taskResult);
-  } catch (error) {
-    if (error instanceof VirtualizorApiError) {
-      console.error(`API Error [${error.code}]: ${error.message}`);
-    } else if (error instanceof Error && error.message.includes('timeout')) {
-      console.error('Task polling timed out');
-    } else {
-      console.error('Unexpected error:', error);
+    } catch (error) {
+        if (error instanceof VirtualizorApiError) {
+            console.log(`Caught VirtualizorApiError: Code ${error.code}, Message: "${error.message}"`);
+        }
     }
-  }
 }
 
 main();

@@ -1,14 +1,13 @@
-import { createVirtualizorClient, VirtualizorApiError } from 'virtualizorjs';
-import {formatIps} from "../src";
+import { VirtualizorApiError, createVirtualizorClient, formatIps } from 'virtualizorjs';
 
 const client = createVirtualizorClient({
-  host: 'your-server.example.com',
-  apiKey: 'your-api-key',
-  apiPass: 'your-api-pass',
+    host: '192.168.47.132',
+    apiKey: 'sYGohFtyUOsosDVBjMqtTBKK3udU0GK0',
+    apiPass: 'Zxoco6fgbyJTBG9HsS5YTH4VydRRoTiw',
 });
 
 async function main() {
-  try {
+    try {
     const vpsList = await client.vps.list();
 
     console.log('VPS Instances:');
@@ -18,13 +17,11 @@ async function main() {
       console.log(`    Bandwidth: ${vps.bandwidth}`);
       console.log(`    IPs: ${formatIps(vps.ips)} `);
     }
-  } catch (error) {
-    if (error instanceof VirtualizorApiError) {
-      console.error(`API Error [${error.code}]: ${error.message}`);
-    } else {
-      console.error('Unexpected error:', error);
+    } catch (error) {
+        if (error instanceof VirtualizorApiError) {
+            console.log(`Caught VirtualizorApiError: Code ${error.code}, Message: "${error.message}"`);
+        }
     }
-  }
 }
 
 main();

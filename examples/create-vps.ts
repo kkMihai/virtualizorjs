@@ -7,8 +7,7 @@ const client = createVirtualizorClient({
 });
 
 async function main() {
-  try {
-    console.log('Creating VPS...');
+    try {
     const result = await client.vps.create({
       hostname: 'example-vps',
       rootpass: 'SecurePassword123!',
@@ -26,13 +25,11 @@ async function main() {
 
       console.log('Task completed successfully:', taskResult);
     }
-  } catch (error) {
-    if (error instanceof VirtualizorApiError) {
-      console.error(`API Error [${error.code}]: ${error.message}`);
-    } else {
-      console.error('Unexpected error:', error);
+    } catch (error) {
+        if (error instanceof VirtualizorApiError) {
+            console.log(`Caught VirtualizorApiError: Code ${error.code}, Message: "${error.message}"`);
+        }
     }
-  }
 }
 
 main();
