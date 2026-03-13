@@ -1,5 +1,5 @@
 export { VirtualizorClient, createVirtualizorClient } from './client';
-export { VirtualizorApiError } from './http';
+export { VirtualizorApiError, VirtualizorNetworkError, VirtualizorTimeoutError } from './http';
 export { formatIps } from './utils/format-ips';
 export type { IpsInput } from './utils/format-ips';
 export type { VirtualizorConfig } from './types/config';
