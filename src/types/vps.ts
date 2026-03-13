@@ -191,9 +191,7 @@ export interface CreateVPSParams {
 }
 
 export interface RebuildVPSParams {
-  /** OS template ID to rebuild with */
   osid: number;
-  /** New root password for the VPS */
   newpass: string;
   /** Must be set to 1 to confirm the rebuild */
   conf: 1;
@@ -201,20 +199,14 @@ export interface RebuildVPSParams {
   format_primary?: 0 | 1;
   /** Send rebuild notification email (0 = no, 1 = yes) */
   eu_send_rebuild_email?: 0 | 1;
-  /** Recipe ID to apply post-rebuild */
   recipe?: number;
-  /** SSH key to inject */
   sshkey?: string;
 }
 
 export interface CloneVPSParams {
-  /** Hostname for the new cloned VPS */
   hostname: string;
-  /** Root password for the new cloned VPS */
   rootpass: string;
-  /** Source server ID (server where the VPS lives) */
   from_server: number;
-  /** Destination server ID (server to clone into) */
   to_server: number;
 }
 
