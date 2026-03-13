@@ -1,3 +1,5 @@
+import type { Logger } from '../logger';
+
 export interface VirtualizorConfig {
   host: string;
   apiKey: string;
@@ -7,6 +9,8 @@ export interface VirtualizorConfig {
   rejectUnauthorized?: boolean;
   timeout?: number;
   debug?: boolean;
+  logger?: Logger;
+  disableUpdateCheck?: boolean;
 }
 
 export interface ResolvedConfig {
@@ -18,4 +22,6 @@ export interface ResolvedConfig {
   rejectUnauthorized: boolean;
   timeout: number;
   debug: boolean;
+  logger: Logger;
+  disableUpdateCheck: boolean;
 }

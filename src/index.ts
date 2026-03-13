@@ -1,7 +1,16 @@
 export { VirtualizorClient, createVirtualizorClient } from './client';
-export { VirtualizorApiError, VirtualizorNetworkError, VirtualizorTimeoutError } from './http';
+export { VirtualizorApiError } from './errors';
 export { formatIps } from './utils/format-ips';
 export type { IpsInput } from './utils/format-ips';
+export type { Logger } from './logger/index';
+export {
+  ConsoleLogger,
+  defaultLogger,
+  colors,
+  symbols,
+  formatError,
+  createBox,
+} from './logger/index';
 export type { VirtualizorConfig } from './types/config';
 export type {
   VPS,

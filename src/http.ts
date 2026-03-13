@@ -1,42 +1,16 @@
 import http from 'node:http';
 import https from 'node:https';
 import { buildQueryString } from './auth.js';
+import { VirtualizorApiError } from './errors.js';
+import type { Logger } from './logger';
 import type { ApiParams, VirtualizorResponse } from './types/common.js';
 import type { ResolvedConfig } from './types/config.js';
-
-export class VirtualizorApiError extends Error {
-  readonly code: number;
-
-  constructor(message: string, code: number) {
-    super(message);
-    this.name = 'VirtualizorApiError';
-    this.code = code;
-  }
-}
-
-export class VirtualizorNetworkError extends Error {
-  constructor(
-    message: string,
-    override readonly cause?: Error,
-  ) {
-    super(message);
-    this.name = 'VirtualizorNetworkError';
-  }
-}
-
-export class VirtualizorTimeoutError extends Error {
-  readonly code = 'ETIMEDOUT';
-
-  constructor(message: string) {
-    super(message);
-    this.name = 'VirtualizorTimeoutError';
-  }
-}
 
 const CONNECTION_TIMEOUT = 5000;
 
 export class HttpClient {
   private readonly agent: http.Agent | https.Agent;
+  private readonly logger: Logger;
 
   constructor(private readonly config: ResolvedConfig) {
     const AgentClass = config.https ? https.Agent : http.Agent;
@@ -47,6 +21,7 @@ export class HttpClient {
       scheduling: 'lifo',
       ...(config.https ? { rejectUnauthorized: config.rejectUnauthorized } : {}),
     });
+    this.logger = config.logger;
   }
 
   parseResponse<T extends VirtualizorResponse>(data: T): T {
@@ -71,7 +46,7 @@ export class HttpClient {
       const redactedQs = qs
         .replace(/adminapikey=[^&]*/, 'adminapikey=[REDACTED]')
         .replace(/adminapipass=[^&]*/, 'adminapipass=[REDACTED]');
-      console.debug(`[Virtualizor] Request: act=${act} path=/index.php${redactedQs}`);
+      this.logger.debug(`Request: act=${act} path=/index.php${redactedQs}`);
     }
 
     const path = `/index.php${qs}`;
@@ -81,14 +56,27 @@ export class HttpClient {
       .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(String(v))}`)
       .join('&');
 
-    const data = await this.rawRequest(path, bodyString || undefined);
-    return this.parseResponse(data as T);
+    try {
+      const data = await this.rawRequest(path, bodyString || undefined);
+      return this.parseResponse(data as T);
+    } catch (err) {
+      // Log the error when debug is enabled
+      if (this.config.debug) {
+        if (err instanceof VirtualizorApiError) {
+          this.logger.error(`[Virtualizor] ● Error: [API Error ${err.code}] ${err.message}`);
+        } else {
+          this.logger.error(`[Virtualizor] ● Error: ${(err as Error).message}`);
+        }
+      }
+      // Re-throw the error so callers can still handle it
+      throw err;
+    }
   }
 
   private validateJsonDepth(obj: unknown, depth = 0): void {
     const MAX_DEPTH = 100;
     if (depth > MAX_DEPTH) {
-      throw new Error('JSON depth limit exceeded');
+      throw new VirtualizorApiError('JSON depth limit exceeded', -32000);
     }
     if (typeof obj === 'object' && obj !== null) {
       if (Array.isArray(obj)) {
@@ -134,8 +122,9 @@ export class HttpClient {
 
           if (res.statusCode === 302 || res.statusCode === 301) {
             reject(
-              new VirtualizorNetworkError(
+              new VirtualizorApiError(
                 `Redirect detected (status ${res.statusCode}). Authentication failed. Location: ${res.headers.location}`,
+                res.statusCode,
               ),
             );
             return;
@@ -146,31 +135,47 @@ export class HttpClient {
             this.validateJsonDepth(parsed);
             resolve(parsed as VirtualizorResponse);
           } catch (err) {
+            // Log the error when debug is enabled
             if (this.config.debug) {
-              console.debug('[Virtualizor] Failed to parse response');
+              if (err instanceof VirtualizorApiError) {
+                this.logger.error(`[Virtualizor] ● Error: [API Error ${err.code}] ${err.message}`);
+              } else {
+                this.logger.error(`[Virtualizor] ● Error: ${(err as Error).message}`);
+              }
             }
+            // Re-throw the error so callers can still handle it
             reject(
-              new VirtualizorNetworkError(
-                `Failed to parse response: ${err instanceof Error ? err.message : 'Invalid JSON'}`,
+              new VirtualizorApiError(
+                `Failed to parse response: ${(err as Error).message ?? 'Invalid JSON'}`,
+                -32700,
               ),
             );
           }
         });
 
         res.on('error', (err) => {
-          reject(new VirtualizorNetworkError('Response stream error', err));
+          // Log the error when debug is enabled
+          if (this.config.debug) {
+            this.logger.error('[Virtualizor] ● Error: Response stream error', err as Error);
+          }
+          reject(
+            new VirtualizorApiError(
+              `Response stream error: ${(err as Error).message ?? 'Unknown error'}`,
+              -32000,
+            ),
+          );
         });
       });
 
       const connectionTimer = setTimeout(() => {
         req.destroy(
-          new VirtualizorTimeoutError(`Connection timeout after ${CONNECTION_TIMEOUT}ms`),
+          new VirtualizorApiError(`Connection timeout after ${CONNECTION_TIMEOUT}ms`, -32000),
         );
       }, CONNECTION_TIMEOUT);
 
       const requestTimer = setTimeout(() => {
         req.destroy(
-          new VirtualizorTimeoutError(`Request timed out after ${this.config.timeout}ms`),
+          new VirtualizorApiError(`Request timed out after ${this.config.timeout}ms`, -32000),
         );
       }, this.config.timeout);
 
@@ -188,10 +193,10 @@ export class HttpClient {
       });
 
       req.on('error', (err) => {
-        if (err instanceof VirtualizorTimeoutError) {
+        if (err instanceof VirtualizorApiError) {
           reject(err);
         } else {
-          reject(new VirtualizorNetworkError('Request error', err));
+          reject(new VirtualizorApiError(`Request error ${err}`, -32000));
         }
       });
 

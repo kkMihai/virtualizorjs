@@ -1,4 +1,5 @@
 import { VPS_CONSTANTS } from '../constants/vps.js';
+import { VirtualizorApiError } from '../errors.js';
 import type { HttpClient } from '../http.js';
 import type { AsyncTaskResult, VirtualizorResponse } from '../types/common.js';
 import type {
@@ -31,11 +32,11 @@ export class VpsResource {
     const res = await this.http.request<GetVPSResponse>('vs', {}, filters);
     const entries = Object.entries(res.vs ?? {});
     if (entries.length === 0) {
-      throw new Error('VPS not found');
+      throw new VirtualizorApiError('VPS not found', 404);
     }
     const first = entries[0];
     if (!first) {
-      throw new Error('VPS not found');
+      throw new VirtualizorApiError('VPS not found', 404);
     }
     const [, vps] = first;
     return vps;
