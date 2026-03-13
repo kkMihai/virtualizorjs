@@ -1,11 +1,6 @@
-import { createVirtualizorClient, VirtualizorApiError } from 'virtualizorjs';
-import {formatIps} from "../src";
-
-const client = createVirtualizorClient({
-  host: 'your-server.example.com',
-  apiKey: 'your-api-key',
-  apiPass: 'your-api-pass',
-});
+import { VirtualizorApiError } from 'virtualizorjs';
+import { formatIps } from '../src';
+import { client } from './virtualizorclient';
 
 async function main() {
   try {
