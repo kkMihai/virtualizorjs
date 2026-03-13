@@ -1,4 +1,4 @@
-import { type Logger, colors, createUpdateBox, symbols } from './logger';
+import { type Logger, createUpdateBox } from '../logger';
 
 const REGISTRY_URL = 'https://registry.npmjs.org/virtualizorjs/latest';
 
