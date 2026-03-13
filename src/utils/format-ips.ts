@@ -35,9 +35,15 @@ export function formatIps(ips: IpsInput, options?: FormatIpsOptions): string | s
     if (str === '') {
       result = [];
     } else if (str.includes(',')) {
-      result = str.split(',').map(s => s.trim()).filter(Boolean);
+      result = str
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean);
     } else if (/\s+/.test(str)) {
-      result = str.split(/\s+/).map(s => s.trim()).filter(Boolean);
+      result = str
+        .split(/\s+/)
+        .map((s) => s.trim())
+        .filter(Boolean);
     } else {
       result = [str];
     }
