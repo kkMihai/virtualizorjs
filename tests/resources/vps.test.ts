@@ -56,8 +56,8 @@ describe('VpsResource', () => {
     });
   });
 
-  describe('get(id)', () => {
-    it('calls act=vs with vpsid query param', async () => {
+  describe('get(filters)', () => {
+    it('calls act=vs with filters as body', async () => {
       const client = makeClient({
         vs: {
           '123': {
@@ -72,11 +72,11 @@ describe('VpsResource', () => {
           },
         },
       });
-      await new VpsResource(client).get('123');
-      expect(client.request).toHaveBeenCalledWith('vs', { vpsid: '123' }, {});
+      await new VpsResource(client).get({ vpsid: '123' });
+      expect(client.request).toHaveBeenCalledWith('vs', {}, { vpsid: '123' });
     });
 
-    it('returns the specific VPS object', async () => {
+    it('returns the first VPS from response', async () => {
       const vps = {
         vpsid: '123',
         hostname: 'web1',
@@ -88,8 +88,32 @@ describe('VpsResource', () => {
         ip: '1.2.3.4',
       };
       const client = makeClient({ vs: { '123': vps } });
-      const result = await new VpsResource(client).get('123');
+      const result = await new VpsResource(client).get({ vpsid: '123' });
       expect(result).toEqual(vps);
+    });
+
+    it('throws when VPS not found', async () => {
+      const client = makeClient({ vs: {} });
+      expect(new VpsResource(client).get({ vpsid: '999' })).rejects.toThrow('VPS not found');
+    });
+
+    it('supports filtering by hostname', async () => {
+      const client = makeClient({
+        vs: {
+          '456': {
+            vpsid: '456',
+            hostname: 'myserver',
+            status: '1',
+            ram: '2048',
+            hdd: '40960',
+            bandwidth: '2000',
+            os_name: 'debian',
+            ip: '5.6.7.8',
+          },
+        },
+      });
+      await new VpsResource(client).get({ vpshostname: 'myserver' });
+      expect(client.request).toHaveBeenCalledWith('vs', {}, { vpshostname: 'myserver' });
     });
   });
 

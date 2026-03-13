@@ -1,6 +1,5 @@
 import { VPS_CONSTANTS } from '../constants/vps.js';
 import type { HttpClient } from '../http.js';
-import type { ApiParams } from '../types/common.js';
 import type { AsyncTaskResult, VirtualizorResponse } from '../types/common.js';
 import type {
   CloneVPSParams,
@@ -28,10 +27,17 @@ export class VpsResource {
     return res.vs ?? {};
   }
 
-  async get(vpsId: string): Promise<VPS> {
-    const res = await this.http.request<GetVPSResponse>('vs', { vpsid: vpsId }, {});
-    const vps = res.vs[vpsId];
-    if (!vps) throw new Error(`VPS ${vpsId} not found in response`);
+  async get(filters: ListVPSParams): Promise<VPS> {
+    const res = await this.http.request<GetVPSResponse>('vs', {}, filters);
+    const entries = Object.entries(res.vs ?? {});
+    if (entries.length === 0) {
+      throw new Error('VPS not found');
+    }
+    const first = entries[0];
+    if (!first) {
+      throw new Error('VPS not found');
+    }
+    const [, vps] = first;
     return vps;
   }
 

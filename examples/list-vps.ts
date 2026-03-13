@@ -1,4 +1,5 @@
 import { createVirtualizorClient, VirtualizorApiError } from 'virtualizorjs';
+import {formatIps} from "../src";
 
 const client = createVirtualizorClient({
   host: 'your-server.example.com',
@@ -14,6 +15,8 @@ async function main() {
     for (const [vpsid, vps] of Object.entries(vpsList)) {
       console.log(`  ${vpsid}: ${vps.hostname}`);
       console.log(`    OS: ${vps.os_name}`);
+      console.log(`    Bandwidth: ${vps.bandwidth}`);
+      console.log(`    IPs: ${formatIps(vps.ips)} `);
     }
   } catch (error) {
     if (error instanceof VirtualizorApiError) {

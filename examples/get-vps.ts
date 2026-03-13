@@ -8,15 +8,13 @@ const client = createVirtualizorClient({
 
 async function main() {
   try {
-    const vps = await client.vps.get('2');
+    const vps = await client.vps.get({ vpsid: '2' });
+    const ipsStr = formatIps(vps.ips, { as: "string" });
 
     console.log(`  ID: ${vps.vpsid}`);
     console.log(`  Hostname: ${vps.hostname}`);
     console.log(`  OS: ${vps.os_name}`);
     console.log(`  Bandwidth: ${vps.bandwidth}`);
-
-    const ipsStr = formatIps(vps.ips, { as: "string"});
-
     console.log(`  Ips: ${ipsStr}`);
   } catch (error) {
     if (error instanceof VirtualizorApiError) {
