@@ -1,9 +1,9 @@
 import { VirtualizorApiError, createVirtualizorClient, formatIps } from 'virtualizorjs';
 
 const client = createVirtualizorClient({
-    host: '192.168.47.132',
-    apiKey: 'sYGohFtyUOsosDVBjMqtTBKK3udU0GK0',
-    apiPass: 'Zxoco6fgbyJTBG9HsS5YTH4VydRRoTiw',
+    host: 'your-server.example.com',
+    apiKey: 'your-api-key',
+    apiPass: 'your-api-pass',
 });
 
 async function main() {
