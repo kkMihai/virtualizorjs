@@ -1,13 +1,14 @@
-import { boxChars, colors } from './formatting.js';
+import {boxChars, colors} from './formatting.js';
 
 interface BoxOptions {
   title?: string;
-  borderColor?: 'cyan' | 'yellow' | 'red' | 'green';
+  borderColor?: 'cyan' | 'yellow' | 'red' | 'green' | 'blue' | 'magenta';
   padding?: number;
+  margin?: number;
 }
 
 export function createBox(content: string, options: BoxOptions = {}): string {
-  const { padding = 1, borderColor = 'cyan' } = options;
+  const { padding = 1, margin = 0, borderColor = 'cyan' } = options;
   const lines = content.split('\n');
   const maxLineWidth = Math.max(...lines.map((l) => l.length));
   const innerWidth = maxLineWidth + padding * 2;
@@ -23,26 +24,55 @@ export function createBox(content: string, options: BoxOptions = {}): string {
     return `${boxChars.vertical}${padded.padEnd(innerWidth)}${boxChars.vertical}`;
   });
 
-  return [colorFn(top), ...paddedLines.map((l) => colorFn(l)), colorFn(bottom)].join('\n');
+  const boxContent = [colorFn(top), ...paddedLines.map((l) => colorFn(l)), colorFn(bottom)].join(
+    '\n',
+  );
+
+  if (margin > 0) {
+    const marginLines = ' '.repeat(margin);
+    return boxContent
+        .split('\n')
+        .map((line) => marginLines + line)
+        .join('\n');
+  }
+
+  return boxContent;
 }
 
 export function createUpdateBox(current: string, latest: string): string {
   const content = [
-    'New version available!',
-    '',
-    `Current: ${current}`,
-    `Latest:  ${latest}`,
-    '',
-    'Run: npm install virtualizorjs@latest',
+    '╔═════════════════════════════════════╗',
+    '║         🚀 UPDATE AVAILABLE 🚀       ║',
+    '╠═════════════════════════════════════╣',
+    '║                                      ║',
+    `║   Current version: ${current.padEnd(18)} ║`,
+    `║   Latest version:  ${latest.padEnd(17)} ║`,
+    '║                                      ║',
+    '║   To update, run:                    ║',
+    '║   npm install virtualizorjs@latest   ║',
+    '║                                      ║',
+    '╚═════════════════════════════════════╝',
   ].join('\n');
 
-  return createBox(content, { borderColor: 'yellow' });
+  return colors.yellow(content);
 }
 
 export function createErrorBox(title: string, message: string, hint?: string): string {
-  const lines = [title, '', message];
-  if (hint) {
-    lines.push('', hint);
-  }
-  return createBox(lines.join('\n'), { borderColor: 'red' });
+  const content = [
+    '╔═════════════════════════════════════╗',
+    '║            ❌ ERROR OCCURRED ❌       ║',
+    '╠═════════════════════════════════════╣',
+    '║                                      ║',
+    `║   ${title.padEnd(34)}║`,
+    '║                                      ║',
+    `║   ${message.padEnd(34)}║`,
+    '║                                      ║',
+    hint ? `║   💡 ${hint.padEnd(29)}║` : '',
+    hint ? '║                                      ║' : '',
+    '╚═════════════════════════════════════╝',
+  ]
+    .filter((line) => line !== undefined)
+    .join('\n');
+
+  return colors.red(content);
 }
