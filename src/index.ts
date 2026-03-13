@@ -1,6 +1,8 @@
-export { VirtualizorClient, createVirtualizorClient } from './client.js';
-export { VirtualizorApiError } from './http.js';
-export type { VirtualizorConfig } from './types/config.js';
+export { VirtualizorClient, createVirtualizorClient } from './client';
+export { VirtualizorApiError } from './http';
+export { formatIps } from './utils/format-ips';
+export type { IpsInput } from './utils/format-ips';
+export type { VirtualizorConfig } from './types/config';
 export type {
   VPS,
   CreateVPSParams,
@@ -8,8 +10,8 @@ export type {
   RebuildVPSParams,
   CloneVPSParams,
   MigrateVPSParams,
-} from './types/vps.js';
-export type { User, CreateUserParams } from './types/users.js';
-export type { Plan, CreatePlanParams } from './types/plans.js';
-export type { Task } from './types/tasks.js';
-export type { AsyncTaskResult, VirtType } from './types/common.js';
+} from './types/vps';
+export type { User, CreateUserParams } from './types/users';
+export type { Plan, CreatePlanParams } from './types/plans';
+export type { Task } from './types/tasks';
+export type { AsyncTaskResult, VirtType } from './types/common';
