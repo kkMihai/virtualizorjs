@@ -1,4 +1,4 @@
-import {boxChars, colors} from './formatting.js';
+import { boxChars, colors } from './formatting.js';
 
 interface BoxOptions {
   title?: string;
@@ -31,9 +31,9 @@ export function createBox(content: string, options: BoxOptions = {}): string {
   if (margin > 0) {
     const marginLines = ' '.repeat(margin);
     return boxContent
-        .split('\n')
-        .map((line) => marginLines + line)
-        .join('\n');
+      .split('\n')
+      .map((line) => marginLines + line)
+      .join('\n');
   }
 
   return boxContent;
