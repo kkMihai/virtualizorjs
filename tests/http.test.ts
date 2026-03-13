@@ -1,6 +1,15 @@
 import { describe, expect, it } from 'bun:test';
-import { HttpClient, VirtualizorApiError } from '../src/http.js';
+import { VirtualizorApiError } from '../src';
+import type { Logger } from '../src';
+import { HttpClient } from '../src/http.js';
 import type { ResolvedConfig } from '../src/types/config.js';
+
+const mockLogger: Logger = {
+  debug: () => {},
+  info: () => {},
+  warn: () => {},
+  error: () => {},
+};
 
 const config: ResolvedConfig = {
   host: 'localhost',
@@ -10,6 +19,9 @@ const config: ResolvedConfig = {
   https: true,
   rejectUnauthorized: false,
   timeout: 30000,
+  debug: false,
+  logger: mockLogger,
+  disableUpdateCheck: false,
 };
 
 describe('HttpClient', () => {
