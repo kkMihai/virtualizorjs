@@ -136,3 +136,5 @@ Code of Conduct & License
 Please follow our [Code of Conduct](CODE_OF_CONDUCT.md) in all interactions. By contributing you agree to license your contributions under the project's MIT License (see `LICENSE`).
 
 Thank you for contributing to VirtualizorJS!
+
+`Disclaimer: written by an LLM Model (GLM-5)`
