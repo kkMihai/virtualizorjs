@@ -83,8 +83,8 @@ try {
 
 | Method | Parameters | Returns | Notes |
 |--------|-----------|---------|-------|
-| `list()` | — | `Record<string, VPS>` | List all VPS |
-| `get(vpsId)` | `vpsId: string` | `VPS` | Get a single VPS |
+| `list(filters?)` | `filters: ListVPSParams` | `Record<string, VPS>` | List all VPS with optional filters |
+| `get(filters)` | `filters: ListVPSParams` | `VPS` | Get a single VPS with filters |
 | `create(params)` | `CreateVPSParams` | `AsyncTaskResult` | Async |
 | `delete(vpsId)` | `vpsId: string` | `AsyncTaskResult` | Async |
 | `start(vpsId)` | `vpsId: string` | `AsyncTaskResult` | Async |
@@ -173,16 +173,20 @@ All resources are fully typed. Import types as needed:
 ```typescript
 import type {
   VPS,
+  ListVPSParams,
   CreateVPSParams,
   RebuildVPSParams,
   CloneVPSParams,
   MigrateVPSParams,
+  VirtType,
   User,
   CreateUserParams,
   Plan,
   CreatePlanParams,
   Task,
   AsyncTaskResult,
+  VirtualizorConfig,
+  IpsInput,
 } from 'virtualizorjs';
 ```
 
