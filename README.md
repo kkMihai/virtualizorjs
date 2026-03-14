@@ -29,12 +29,12 @@ bun add virtualizorjs
 import { createVirtualizorClient } from 'virtualizorjs';
 
 const client = createVirtualizorClient({
-  host: 'virtualizor.example.com',
-  apiKey: 'your-api-key',
-  apiPass: 'your-api-pass',
-  // Optional: port (default 4085), https (default true), 
-  // rejectUnauthorized (default false), timeout (default 30000ms)
-  // 4085 for Https, 4084 for Http
+    host: process.env.VIRTUALIZOR_HOST!,
+    apiKey: process.env.VIRTUALIZOR_API_KEY!,
+    apiPass: process.env.VIRTUALIZOR_API_PASS!,
+    // Optional: port (default 4085), https (default true),
+    // rejectUnauthorized (default false), timeout (default 30000ms)
+    // Ports: 4085 (HTTPS), 4084 (HTTP)
 });
 ```
 
