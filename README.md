@@ -6,9 +6,6 @@
 
 A **TypeScript-first** SDK for the [Virtualizor](https://www.virtualizor.com/) server management API. Manage VPS instances, users, and plans with a clean, namespaced interface and zero production dependencies.
 
-> [!IMPORTANT]
-> Since the Virtualizor API documentation is a mess (at least for me), I need help from YOU to report bugs, missing features or just to tell me that something is not clear. You can do that by opening an issue or a pull request.
-
 ## Installation
 
 **npm:**
