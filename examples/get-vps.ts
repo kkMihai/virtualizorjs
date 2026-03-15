@@ -5,9 +5,9 @@ import {
 } from 'virtualizorjs';
 
 const client = createVirtualizorClient({
-  host: 'your-server.example.com',
-  apiKey: 'your-api-key',
-  apiPass: 'your-api-pass',
+  host: process.env.VIRTUALIZOR_HOST ?? "your-virtualizor-host.com",
+  apiKey: process.env.VIRTUALIZOR_API_KEY ?? "your-api-key",
+  apiPass: process.env.VIRTUALIZOR_API_PASS ?? "your-api-pass",
 });
 
 async function main() {
