@@ -10,18 +10,8 @@ export const colors = {
   green: (str: string) => colorize(32, str),
   yellow: (str: string) => colorize(33, str),
   blue: (str: string) => colorize(34, str),
-  magenta: (str: string) => colorize(35, str),
   cyan: (str: string) => colorize(36, str),
-  white: (str: string) => colorize(37, str),
-  gray: (str: string) => colorize(90, str),
   dim: (str: string) => colorize(2, str),
-  bold: (str: string) => colorize(1, str),
-  underline: (str: string) => colorize(4, str),
-  bgRed: (str: string) => colorize(41, str),
-  bgGreen: (str: string) => colorize(42, str),
-  bgYellow: (str: string) => colorize(43, str),
-  bgBlue: (str: string) => colorize(44, str),
-  bgCyan: (str: string) => colorize(46, str),
 };
 
 export const symbols = {
@@ -34,13 +24,4 @@ export const symbols = {
   chevron: '›',
   pointer: '❯',
   star: '★',
-};
-
-export const boxChars = {
-  topLeft: '┌',
-  topRight: '┐',
-  bottomLeft: '└',
-  bottomRight: '┘',
-  horizontal: '─',
-  vertical: '│',
 };

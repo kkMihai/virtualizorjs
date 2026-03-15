@@ -9,9 +9,6 @@ export {
   colors,
   symbols,
   formatError,
-  createBox,
-  createUpdateBox,
-  createErrorBox,
 } from './logger/index';
 export type { VirtualizorConfig } from './types/config';
 export type {

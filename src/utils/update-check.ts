@@ -1,4 +1,4 @@
-import { type Logger, createUpdateBox } from '../logger';
+import type { Logger } from '../logger';
 
 const REGISTRY_URL = 'https://registry.npmjs.org/virtualizorjs/latest';
 
@@ -48,9 +48,7 @@ export async function checkForUpdates(
     if (!isNewerVersion(currentVersion, latestVersion)) return;
 
     logger.warn(`Update available: ${currentVersion} → ${latestVersion}`);
-    console.log();
-    console.log(createUpdateBox(currentVersion, latestVersion));
-    console.log();
+    logger.warn('Run "npm install virtualizorjs@latest" to update');
   } catch {
     // Silently fail
   }
