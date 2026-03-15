@@ -8,3 +8,6 @@ package-lock.json
 
 .idea/
 *.iml
+
+.env
+.env.*
