@@ -1,7 +1,7 @@
-import { VPS_CONSTANTS } from '../constants/vps.js';
-import { VirtualizorApiError } from '../errors.js';
-import type { HttpClient } from '../http.js';
-import type { AsyncTaskResult, VirtualizorResponse } from '../types/common.js';
+import { VPS_CONSTANTS } from '../constants/vps';
+import { VirtualizorApiError } from '../errors';
+import type { HttpClient } from '../http';
+import type { AsyncTaskResult, VirtualizorResponse } from '../types/common';
 import type {
   CloneVPSParams,
   CreateVPSParams,
@@ -11,7 +11,8 @@ import type {
   VNCInfo,
   VPS,
   VPSStatsResponse,
-} from '../types/vps.js';
+  VPSStatusResponse,
+} from '../types/vps';
 
 interface ListVPSResponse extends VirtualizorResponse {
   vs: Record<string, VPS>;
@@ -110,8 +111,8 @@ export class VpsResource {
     );
   }
 
-  async status(vpsId: string): Promise<unknown> {
-    return this.http.request('vstatus', { vpsid: vpsId }, {});
+  async status(vpsId: string): Promise<VPSStatusResponse> {
+    return this.http.request<VPSStatusResponse>('vstatus', { vpsid: vpsId }, {});
   }
 
   async vnc(vpsId: string): Promise<VNCInfo> {
