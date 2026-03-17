@@ -8,7 +8,7 @@ interface ListPlansResponse extends VirtualizorResponse {
 }
 
 interface GetPlanResponse extends VirtualizorResponse {
-  plan: Record<string, Plan>;
+  plans: Record<string, Plan>;
 }
 
 export class PlansResource {
@@ -28,8 +28,8 @@ export class PlansResource {
   }
 
   async get(planId: string): Promise<Plan> {
-    const res = await this.http.request<GetPlanResponse>('plans', {}, { pid: planId });
-    const plan = res.plan[planId];
+    const res = await this.http.request<GetPlanResponse>('plans', {}, {});
+    const plan = res.plans[planId];
     if (!plan) {
       throw new VirtualizorApiError('Plan not found', 404);
     }
