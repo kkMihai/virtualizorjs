@@ -1,11 +1,16 @@
-import type { HttpClient } from '../http.js';
-import type { ApiParams } from '../types/common.js';
-import type { AsyncTaskResult, VirtualizorResponse } from '../types/common.js';
-import type { CreatePlanParams, Plan } from '../types/plans.js';
+import { VirtualizorApiError } from '../errors';
+import type { HttpClient } from '../http';
+import type { AsyncTaskResult, VirtualizorResponse } from '../types/common';
+import type { CreatePlanParams, Plan, UpdatePlanParams } from '../types/plans';
 
 interface ListPlansResponse extends VirtualizorResponse {
   plans: Record<string, Plan>;
 }
+
+interface GetPlanResponse extends VirtualizorResponse {
+  plan: Record<string, Plan>;
+}
+
 export class PlansResource {
   constructor(private readonly http: HttpClient) {}
 
@@ -20,5 +25,18 @@ export class PlansResource {
 
   async delete(planId: string): Promise<AsyncTaskResult> {
     return this.http.request<AsyncTaskResult>('plans', {}, { delete: planId });
+  }
+
+  async get(planId: string): Promise<Plan> {
+    const res = await this.http.request<GetPlanResponse>('plans', {}, { pid: planId });
+    const plan = res.plan[planId];
+    if (!plan) {
+      throw new VirtualizorApiError('Plan not found', 404);
+    }
+    return plan;
+  }
+
+  async update(params: UpdatePlanParams): Promise<AsyncTaskResult> {
+    return this.http.request<AsyncTaskResult>('editplan', {}, params);
   }
 }

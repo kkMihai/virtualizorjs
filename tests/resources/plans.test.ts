@@ -50,4 +50,78 @@ describe('PlansResource', () => {
     await new PlansResource(client).delete('5');
     expect(client.request).toHaveBeenCalledWith('plans', {}, { delete: '5' });
   });
+
+  describe('get(planId)', () => {
+    it('calls act=plans with pid as body', async () => {
+      const client = makeClient({
+        plan: {
+          '1': {
+            pid: '1',
+            plan_name: 'basic',
+            disk: '20480',
+            ram: '1024',
+            bandwidth: '1000',
+            cpu: '1',
+          },
+        },
+      });
+      await new PlansResource(client).get('1');
+      expect(client.request).toHaveBeenCalledWith('plans', {}, { pid: '1' });
+    });
+
+    it('returns the plan when found', async () => {
+      const plan = {
+        pid: '1',
+        plan_name: 'basic',
+        disk: '20480',
+        ram: '1024',
+        bandwidth: '1000',
+        cpu: '1',
+      };
+      const client = makeClient({ plan: { '1': plan } });
+      const result = await new PlansResource(client).get('1');
+      expect(result).toEqual(plan);
+    });
+
+    it('throws when plan not found', async () => {
+      const client = makeClient({ plan: {} });
+      await expect(new PlansResource(client).get('999')).rejects.toThrow('Plan not found');
+    });
+  });
+
+  describe('update(params)', () => {
+    it('calls act=editplan with params as body', async () => {
+      const client = makeClient({ done: 1 });
+      await new PlansResource(client).update({ pid: '1', plan_name: 'updated' });
+      expect(client.request).toHaveBeenCalledWith(
+        'editplan',
+        {},
+        expect.objectContaining({ pid: '1', plan_name: 'updated' }),
+      );
+    });
+
+    it('allows updating multiple fields', async () => {
+      const client = makeClient({ done: 1 });
+      await new PlansResource(client).update({
+        pid: '1',
+        plan_name: 'premium',
+        disk: 51200,
+        ram: 4096,
+        bandwidth: 5000,
+        cpu: 4,
+      });
+      expect(client.request).toHaveBeenCalledWith(
+        'editplan',
+        {},
+        expect.objectContaining({
+          pid: '1',
+          plan_name: 'premium',
+          disk: 51200,
+          ram: 4096,
+          bandwidth: 5000,
+          cpu: 4,
+        }),
+      );
+    });
+  });
 });

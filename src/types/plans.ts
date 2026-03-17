@@ -17,3 +17,14 @@ export interface CreatePlanParams {
   virt?: string;
   [key: string]: unknown;
 }
+
+export interface UpdatePlanParams {
+  pid: string;
+  plan_name?: string;
+  disk?: number;
+  ram?: number;
+  bandwidth?: number;
+  cpu?: number;
+  virt?: string;
+  [key: string]: unknown;
+}
