@@ -1,6 +1,6 @@
 {
   "name": "virtualizorjs",
-  "version": "2.2.2",
+  "version": "2.3.0",
   "description": "TypeScript SDK for the Virtualizor server management API. Create, start, stop, restart, rebuild, and manage VPS instances with a type-safe, developer-friendly client.",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
