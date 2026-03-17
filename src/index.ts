@@ -18,8 +18,12 @@ export type {
   RebuildVPSParams,
   CloneVPSParams,
   MigrateVPSParams,
+  VPSStatusResponse,
+  VPSStatusInfo,
+  VNCInfo,
+  VPSStatsResponse,
 } from './types/vps';
-export type { User, CreateUserParams } from './types/users';
-export type { Plan, CreatePlanParams } from './types/plans';
+export type { User, CreateUserParams, UpdateUserParams } from './types/users';
+export type { Plan, CreatePlanParams, UpdatePlanParams } from './types/plans';
 export type { Task } from './types/tasks';
 export type { AsyncTaskResult, VirtType } from './types/common';
