@@ -23,3 +23,14 @@ export interface EditUserParams {
   fname?: string;
   lname?: string;
 }
+
+export interface UpdateUserParams {
+  uid: string;
+  email?: string;
+  password?: string;
+  fname?: string;
+  lname?: string;
+  status?: string;
+  acttype?: number;
+  [key: string]: unknown;
+}

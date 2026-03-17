@@ -1,10 +1,14 @@
-import type { HttpClient } from '../http.js';
-import type { ApiParams } from '../types/common.js';
-import type { AsyncTaskResult, VirtualizorResponse } from '../types/common.js';
-import type { CreateUserParams, User } from '../types/users.js';
+import { VirtualizorApiError } from '../errors';
+import type { HttpClient } from '../http';
+import type { AsyncTaskResult, VirtualizorResponse } from '../types/common';
+import type { CreateUserParams, UpdateUserParams, User } from '../types/users';
 
 interface ListUsersResponse extends VirtualizorResponse {
   users: Record<string, User>;
+}
+
+interface GetUserResponse extends VirtualizorResponse {
+  user: Record<string, User>;
 }
 
 export class UsersResource {
@@ -29,5 +33,18 @@ export class UsersResource {
 
   async unsuspend(uid: string): Promise<AsyncTaskResult> {
     return this.http.request<AsyncTaskResult>('users', {}, { unsuspend: uid });
+  }
+
+  async get(uid: string): Promise<User> {
+    const res = await this.http.request<GetUserResponse>('users', {}, { uid });
+    const user = res.user[uid];
+    if (!user) {
+      throw new VirtualizorApiError('User not found', 404);
+    }
+    return user;
+  }
+
+  async update(params: UpdateUserParams): Promise<AsyncTaskResult> {
+    return this.http.request<AsyncTaskResult>('edituser', {}, params);
   }
 }

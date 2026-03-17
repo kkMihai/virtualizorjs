@@ -47,4 +47,60 @@ describe('UsersResource', () => {
     await new UsersResource(client).unsuspend('42');
     expect(client.request).toHaveBeenCalledWith('users', {}, { unsuspend: '42' });
   });
+
+  describe('get(uid)', () => {
+    it('calls act=users with uid as body', async () => {
+      const client = makeClient({
+        user: { '42': { uid: '42', email: 'a@b.com', status: '1', type: '0' } },
+      });
+      await new UsersResource(client).get('42');
+      expect(client.request).toHaveBeenCalledWith('users', {}, { uid: '42' });
+    });
+
+    it('returns the user when found', async () => {
+      const user = { uid: '42', email: 'a@b.com', status: '1', type: '0' };
+      const client = makeClient({ user: { '42': user } });
+      const result = await new UsersResource(client).get('42');
+      expect(result).toEqual(user);
+    });
+
+    it('throws when user not found', async () => {
+      const client = makeClient({ user: {} });
+      await expect(new UsersResource(client).get('999')).rejects.toThrow('User not found');
+    });
+  });
+
+  describe('update(params)', () => {
+    it('calls act=edituser with params as body', async () => {
+      const client = makeClient({ done: 1 });
+      await new UsersResource(client).update({ uid: '42', email: 'new@example.com' });
+      expect(client.request).toHaveBeenCalledWith(
+        'edituser',
+        {},
+        expect.objectContaining({ uid: '42', email: 'new@example.com' }),
+      );
+    });
+
+    it('allows updating multiple fields', async () => {
+      const client = makeClient({ done: 1 });
+      await new UsersResource(client).update({
+        uid: '42',
+        email: 'new@example.com',
+        password: 'newpassword',
+        fname: 'John',
+        lname: 'Doe',
+      });
+      expect(client.request).toHaveBeenCalledWith(
+        'edituser',
+        {},
+        expect.objectContaining({
+          uid: '42',
+          email: 'new@example.com',
+          password: 'newpassword',
+          fname: 'John',
+          lname: 'Doe',
+        }),
+      );
+    });
+  });
 });
