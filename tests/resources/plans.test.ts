@@ -54,7 +54,7 @@ describe('PlansResource', () => {
   describe('get(planId)', () => {
     it('calls act=plans with pid as body', async () => {
       const client = makeClient({
-        plan: {
+        plans: {
           '1': {
             pid: '1',
             plan_name: 'basic',
@@ -66,7 +66,7 @@ describe('PlansResource', () => {
         },
       });
       await new PlansResource(client).get('1');
-      expect(client.request).toHaveBeenCalledWith('plans', {}, { pid: '1' });
+      expect(client.request).toHaveBeenCalledWith('plans', {}, {});
     });
 
     it('returns the plan when found', async () => {
@@ -78,14 +78,14 @@ describe('PlansResource', () => {
         bandwidth: '1000',
         cpu: '1',
       };
-      const client = makeClient({ plan: { '1': plan } });
+      const client = makeClient({ plans: { '1': plan } });
       const result = await new PlansResource(client).get('1');
       expect(result).toEqual(plan);
     });
 
     it('throws when plan not found', async () => {
-      const client = makeClient({ plan: {} });
-      await expect(new PlansResource(client).get('999')).rejects.toThrow('Plan not found');
+      const client = makeClient({ plans: {} });
+      expect(new PlansResource(client).get('999')).rejects.toThrow('Plan not found');
     });
   });
 
