@@ -236,4 +236,24 @@ export interface VNCInfo extends VirtualizorResponse {
   [key: string]: unknown;
 }
 
-// virtualizor api is so shit omfg
+export interface VPSStatusInfo {
+  status: number;
+  used_cpu?: string;
+  used_ram?: number;
+  used_disk?: number;
+  net_in?: number;
+  net_out?: number;
+  used_inode?: string;
+  io_read?: number;
+  io_write?: number;
+  inode?: number;
+  ram?: string;
+  disk?: string;
+  used_bandwidth?: string;
+  bandwidth?: string;
+  virt?: string;
+}
+
+export interface VPSStatusResponse extends VirtualizorResponse {
+  [key: string]: VPSStatusInfo | unknown;
+}
