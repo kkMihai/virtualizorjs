@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'bun:test';
-import { VirtualizorApiError } from '../src';
 import type { Logger } from '../src';
+import { VirtualizorApiError } from '../src';
 import { HttpClient } from '../src/http.js';
 import type { ResolvedConfig } from '../src/types/config.js';
 

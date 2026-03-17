@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'bun:test';
-import { VirtualizorClient, createVirtualizorClient } from '../src/client.js';
+import { createVirtualizorClient, VirtualizorClient } from '../src/client.js';
 
 describe('VirtualizorClient', () => {
   const config = {

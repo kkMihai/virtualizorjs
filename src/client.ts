@@ -1,7 +1,7 @@
 import { DEFAULT_CONFIG } from './config/defaults.js';
 import { VirtualizorApiError } from './errors.js';
 import { HttpClient } from './http.js';
-import { type Logger, defaultLogger } from './logger';
+import { defaultLogger, type Logger } from './logger';
 import { PlansResource } from './resources/plans.js';
 import { TasksResource } from './resources/tasks.js';
 import { UsersResource } from './resources/users.js';
