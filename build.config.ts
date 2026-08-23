@@ -1,10 +1,18 @@
+import { readFileSync } from 'node:fs';
 import { defineBuildConfig } from 'unbuild';
+
+const { version } = JSON.parse(readFileSync(new URL('package.json', import.meta.url), 'utf8')) as {
+  version: string;
+};
 
 export default defineBuildConfig({
   entries: ['./src/index'],
   clean: true,
   declaration: 'compatible',
   sourcemap: false,
+  replace: {
+    __PACKAGE_VERSION__: JSON.stringify(version),
+  },
   rollup: {
     emitCJS: true,
     inlineDependencies: false,
@@ -16,5 +24,5 @@ export default defineBuildConfig({
       treeShaking: true,
       target: 'esnext',
     },
-  }
+  },
 });

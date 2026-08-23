@@ -8,8 +8,7 @@ import { UsersResource } from './resources/users.js';
 import { VpsResource } from './resources/vps.js';
 import type { ResolvedConfig, VirtualizorConfig } from './types/config.js';
 import { checkForUpdates } from './utils/update-check';
-
-const PACKAGE_VERSION = require('../package.json').version as string;
+import { PACKAGE_VERSION, UNKNOWN_VERSION } from './version.js';
 
 export class VirtualizorClient {
   readonly vps: VpsResource;
@@ -41,7 +40,7 @@ export class VirtualizorClient {
     this.plans = new PlansResource(http);
     this.tasks = new TasksResource(http);
 
-    if (!resolved.disableUpdateCheck) {
+    if (!resolved.disableUpdateCheck && PACKAGE_VERSION !== UNKNOWN_VERSION) {
       checkForUpdates(PACKAGE_VERSION, logger).catch(() => {});
     }
   }
